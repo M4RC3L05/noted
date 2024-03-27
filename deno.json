@@ -1,0 +1,23 @@
+{
+  "name": "@m4rc3l05/noted",
+  "version": "0.0.0",
+  "tasks": {
+    "dev:api": "deno run -A --unstable-ffi --lock=deno.lock --cached-only src/apps/api/main.ts",
+    "dev:dbmate": "sudo docker run -it --rm -v \"$(pwd)/src:/src\" -v \"$(pwd)/data:/data\" -u \"$(id -u):$(id -g)\" ghcr.io/amacneil/dbmate -u 'sqlite:./data/app.db' -d ./src/database/migrations --no-dump-schema",
+    "deps:lock": "deno cache --lock=deno.lock --lock-write src/**/*.ts ./.bin/*.ts",
+    "deps": "deno cache --reload --lock=deno.lock src/**/*.ts ./.bin/*.ts"
+  },
+  "imports": {
+    "@db/sqlite": "jsr:@db/sqlite@0.11.1",
+    "@m4rc3l05/sqlite-tag": "jsr:@m4rc3l05/sqlite-tag@0.1.7",
+    "@std/async": "jsr:@std/async@0.220.1",
+    "@std/collections": "jsr:@std/collections@0.220.1",
+    "@std/log": "jsr:@std/log@0.220.1",
+    "@std/streams": "jsr:@std/streams@0.220.1",
+    "@std/text": "jsr:@std/text@0.220.1",
+    "@std/ulid": "jsr:@std/ulid@0.220.1",
+    "config": "npm:config@3.3.11",
+    "hono": "npm:hono@4.1.4",
+    "zod": "https://deno.land/x/zod@v3.22.4/mod.ts"
+  }
+}
