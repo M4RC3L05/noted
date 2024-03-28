@@ -35,10 +35,7 @@ export const makeApp = (
   });
 
   app.use("*", cors());
-  app.use(
-    "*",
-    basicAuth({ ...basicAuthConfig }),
-  );
+  app.use("*", basicAuth({ ...basicAuthConfig }));
   app.get("/api/notes", (c) => {
     const { includeDeleted } = z.object({
       includeDeleted: z.string().optional(),
