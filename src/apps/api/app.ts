@@ -3,6 +3,7 @@ import { CustomDatabase } from "../../database/mod.ts";
 import { sql } from "@m4rc3l05/sqlite-tag";
 import { makeLogger } from "../../common/logger/mod.ts";
 import { z } from "zod";
+import { basicAuth } from "hono/midlewares";
 
 declare module "hono" {
   interface ContextVariableMap {
@@ -37,6 +38,7 @@ export const makeApp = (
     return next();
   });
 
+  app.use(basicAuth({ password: "bar", username: "foo" }));
   app.get("/api/notes", (c) => {
     const { includeDeleted } = z.object({
       includeDeleted: z.string().optional(),
