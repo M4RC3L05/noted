@@ -245,7 +245,8 @@
       "jsr:@std/streams@0.220.1",
       "jsr:@std/text@0.220.1",
       "jsr:@std/ulid@0.220.1",
-      "npm:config@3.3.11"
+      "npm:config@3.3.11",
+      "npm:marked@12.0.1"
     ]
   }
 }

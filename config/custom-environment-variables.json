@@ -10,6 +10,17 @@
         "username": "APPS_API_BASIC_AUTH_USERNAME",
         "password": "APPS_API_BASIC_AUTH_PASSWORD"
       }
+    },
+    "web": {
+      "host": "APPS_WEB_HOST",
+      "port": {
+        "__name": "APPS_WEB_PORT",
+        "__format": "number"
+      },
+      "basicAuth": {
+        "username": "APPS_WEB_BASIC_AUTH_USERNAME",
+        "password": "APPS_WEB_BASIC_AUTH_PASSWORD"
+      }
     }
   },
   "database": {

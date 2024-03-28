@@ -7,6 +7,14 @@
         "username": "foo",
         "password": "bar"
       }
+    },
+    "web": {
+      "host": "127.0.0.1",
+      "port": 4322,
+      "basicAuth": {
+        "username": "foo",
+        "password": "bar"
+      }
     }
   },
   "database": {
