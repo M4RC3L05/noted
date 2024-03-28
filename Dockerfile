@@ -12,4 +12,6 @@ COPY . .
 
 RUN deno task deps
 
-CMD ["run", "-A", "--unstable-ffi", "--lock=deno.lock", "--cached-only", "src/apps/api/main.ts"]
+VOLUME [ "/app/data" ]
+
+EXPOSE 4321 4322
