@@ -1,15 +1,18 @@
 import { html } from "hono/helper.ts";
 import type { HtmlEscapedString } from "hono/utils/html.ts";
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+// deno-lint-ignore no-explicit-any
 type Component<P extends Record<string, unknown> = any> = P extends Record<
   string,
   unknown
 > ? (props: P) => HtmlEscapedString | Promise<HtmlEscapedString>
   : () => HtmlEscapedString | Promise<HtmlEscapedString>;
 
+// deno-lint-ignore no-explicit-any
 type ScriptComponent<P extends Record<string, unknown> = any> = Component<P>;
+// deno-lint-ignore no-explicit-any
 type BodyComponent<P extends Record<string, unknown> = any> = Component<P>;
+// deno-lint-ignore no-explicit-any
 type CSSComponent<P extends Record<string, unknown> = any> = Component<P>;
 
 const MainLayout = <B extends BodyComponent>({
