@@ -13,13 +13,14 @@
     "@m4rc3l05/sqlite-tag": "jsr:@m4rc3l05/sqlite-tag@0.1.7",
     "@std/async": "jsr:@std/async@0.220.1",
     "@std/collections": "jsr:@std/collections@0.220.1",
+    "@std/encoding": "jsr:@std/encoding@0.220.1",
     "@std/log": "jsr:@std/log@0.220.1",
     "@std/streams": "jsr:@std/streams@0.220.1",
     "@std/text": "jsr:@std/text@0.220.1",
     "@std/ulid": "jsr:@std/ulid@0.220.1",
     "config": "npm:config@3.3.11",
     "hono": "https://deno.land/x/hono@v4.1.5/mod.ts",
-    "hono/middleware": "https://deno.land/x/hono@v4.1.5/middleware.ts",
+    "hono/": "https://deno.land/x/hono@v4.1.5/",
     "marked": "npm:marked@12.0.1",
     "zod": "https://deno.land/x/zod@v3.22.4/mod.ts"
   }

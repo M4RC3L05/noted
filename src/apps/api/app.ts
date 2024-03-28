@@ -2,7 +2,7 @@ import { Hono, HTTPException } from "hono";
 import { CustomDatabase } from "../../database/mod.ts";
 import { sql } from "@m4rc3l05/sqlite-tag";
 import { z } from "zod";
-import { basicAuth, cors } from "hono/middleware";
+import { basicAuth, cors } from "hono/middleware.ts";
 import config from "config";
 import { errorMapper } from "../../common/middlewares/mod.ts";
 import { errorMappers } from "../../common/errors/mod.ts";
@@ -108,7 +108,7 @@ export const makeApp = (
         set
           ${sql.if(typeof name === "string", () => sql`name = ${name}`)}
           ${
-        sql.if(typeof content === "string", () => sql`content = ${content}`)
+        sql.if(typeof content === "string", () => sql`,content = ${content}`)
       }
           ${
         sql.if(typeof del === "boolean", () =>

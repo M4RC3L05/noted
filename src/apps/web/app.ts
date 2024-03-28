@@ -1,7 +1,10 @@
 import { Hono, HTTPException } from "hono";
-import { basicAuth, secureHeaders } from "hono/middleware";
+import { basicAuth, secureHeaders } from "hono/middleware.ts";
 import config from "config";
 import { makeLogger } from "../../common/logger/mod.ts";
+import { notesViews } from "./views/mod.ts";
+import { encodeBase64 } from "@std/encoding/base64";
+import { parse } from "marked";
 
 declare module "hono" {
   interface ContextVariableMap {
@@ -22,14 +25,15 @@ export const makeApp = (
 
     if (error instanceof HTTPException) {
       if (error.res) {
-        for (const [key, value] of error.res.headers.entries()) {
+        error.res.headers.forEach((value, key) => {
           c.header(key, value);
-        }
+        });
       }
     }
 
     return c.text(
       error.message ?? "Something broke",
+      // deno-lint-ignore no-explicit-any
       (error as any).status ?? 500,
     );
   });
@@ -46,6 +50,42 @@ export const makeApp = (
 
   app.use("*", secureHeaders());
   app.use("*", basicAuth({ ...basicAuthConfig }));
+
+  app.get("/", async (c) => {
+    const { data: notes } = await fetch("http://127.0.0.1:4321/api/notes", {
+      headers: {
+        "authorization": `Basic ${
+          encodeBase64(
+            `${basicAuthConfig.username}:${basicAuthConfig.password}`,
+          )
+        }`,
+      },
+    }).then((response) => response.json());
+
+    return c.html(notesViews.pages.Index({ notes: notes }));
+  });
+  app.get("/notes/:id", async (c) => {
+    const { id } = c.req.param();
+    const { data: note } = await fetch(
+      `http://127.0.0.1:4321/api/notes/${id}`,
+      {
+        headers: {
+          "authorization": `Basic ${
+            encodeBase64(
+              `${basicAuthConfig.username}:${basicAuthConfig.password}`,
+            )
+          }`,
+        },
+      },
+    ).then((response) => response.json());
+
+    return c.html(
+      notesViews.pages.Show({
+        note: note,
+        rendered: await parse(note.content ?? ""),
+      }),
+    );
+  });
 
   return app;
 };
