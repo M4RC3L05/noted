@@ -1,5 +1,4 @@
-import { Hono } from "hono";
-import { HTTPException } from "hono/http-exception";
+import { Hono, HTTPException } from "hono";
 import { CustomDatabase } from "../../database/mod.ts";
 import { sql } from "@m4rc3l05/sqlite-tag";
 import { makeLogger } from "../../common/logger/mod.ts";
