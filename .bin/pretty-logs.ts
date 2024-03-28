@@ -40,25 +40,29 @@ for await (const line of stdinByLines) {
 
   const { dateTime, name, level, message, ...rest } = jsonParsed;
 
-  console.log(
-    `%c[${dateTime}] %c(${name}) %c${level}: %c${message}%c${
-      Object.keys(rest).length > 0
-        ? `\n${
-          Deno.inspect(rest, {
-            colors: true,
-            compact: false,
-            strAbbreviateSize: Number.POSITIVE_INFINITY,
-            depth: 1000,
-            sorted: true,
-            trailingComma: true,
-          })
-        }`
-        : ""
-    }`,
-    "color:lightpink",
-    "color:orange",
-    levelColor[level as LevelName],
-    "color:green",
-    "color:reset",
-  );
+  if (dateTime && name && level) {
+    console.log(
+      `%c[${dateTime}] %c(${name}) %c${level}: %c${message}%c${
+        Object.keys(rest ?? {}).length > 0
+          ? `\n${
+            Deno.inspect(rest, {
+              colors: true,
+              compact: false,
+              strAbbreviateSize: Number.POSITIVE_INFINITY,
+              depth: 1000,
+              sorted: true,
+              trailingComma: true,
+            })
+          }`
+          : ""
+      }`,
+      "color:lightpink",
+      "color:orange",
+      levelColor[level as LevelName],
+      "color:green",
+      "color:reset",
+    );
+  } else {
+    console.log(jsonParsed);
+  }
 }
