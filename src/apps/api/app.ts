@@ -1,9 +1,11 @@
 import { Hono, HTTPException } from "hono";
 import { CustomDatabase } from "../../database/mod.ts";
 import { sql } from "@m4rc3l05/sqlite-tag";
-import { makeLogger } from "../../common/logger/mod.ts";
 import { z } from "zod";
-import { basicAuth } from "hono/midlewares";
+import { basicAuth, cors } from "hono/midlewares";
+import config from "config";
+import { errorMapper } from "../../common/middlewares/mod.ts";
+import { errorMappers } from "../../common/errors/mod.ts";
 
 declare module "hono" {
   interface ContextVariableMap {
@@ -12,33 +14,31 @@ declare module "hono" {
   }
 }
 
-const log = makeLogger("app");
+const basicAuthConfig = config.get("apps.api.basicAuth");
 
 export const makeApp = (
   { db, signal }: { db: CustomDatabase; signal: AbortSignal },
 ) => {
   const app = new Hono();
 
-  app.onError((error, c) => {
-    log.error("Error while handling request", { error });
-
-    return c.json({
-      error: { code: "internal-server-error", message: "Something went wrong" },
-    }, 500);
-  });
+  app.onError(errorMapper({ defaultMapper: errorMappers.defaultErrorMapper }));
 
   app.notFound((c) =>
     c.json({ error: { code: "not-found", message: "Not found" } }, 404)
   );
 
-  app.use((c, next) => {
+  app.use("*", (c, next) => {
     c.set("shutdown", signal);
     c.set("db", db);
 
     return next();
   });
 
-  app.use(basicAuth({ password: "bar", username: "foo" }));
+  app.use("*", cors());
+  app.use(
+    "*",
+    basicAuth({ ...basicAuthConfig }),
+  );
   app.get("/api/notes", (c) => {
     const { includeDeleted } = z.object({
       includeDeleted: z.string().optional(),

@@ -23,7 +23,8 @@
       "jsr:@std/path@^0.214.0": "jsr:@std/path@0.214.0",
       "jsr:@std/streams@0.220.1": "jsr:@std/streams@0.220.1",
       "jsr:@std/text@0.220.1": "jsr:@std/text@0.220.1",
-      "jsr:@std/ulid@0.220.1": "jsr:@std/ulid@0.220.1"
+      "jsr:@std/ulid@0.220.1": "jsr:@std/ulid@0.220.1",
+      "npm:config@3.3.11": "npm:config@3.3.11"
     },
     "jsr": {
       "@db/sqlite@0.11.1": {
@@ -125,6 +126,18 @@
       },
       "@std/ulid@0.220.1": {
         "integrity": "e61b7cc36b8aab1a90cae0958b169a79bb71ded3cda039ba722fdc09191a5537"
+      }
+    },
+    "npm": {
+      "config@3.3.11": {
+        "integrity": "sha512-Dhn63ZoWCW5EMg4P0Sl/XNsj/7RLiUIA1x1npCy+m2cRwRHzLnt3UtYtxRDMZW/6oOMdWhCzaGYkOcajGgrAOA==",
+        "dependencies": {
+          "json5": "json5@2.2.3"
+        }
+      },
+      "json5@2.2.3": {
+        "integrity": "sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==",
+        "dependencies": {}
       }
     }
   },

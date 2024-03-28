@@ -1,3 +1,15 @@
 {
-  "foo": "bar"
+  "apps": {
+    "api": {
+      "host": "127.0.0.1",
+      "port": 4321,
+      "basicAuth": {
+        "username": "foo",
+        "password": "bar"
+      }
+    }
+  },
+  "database": {
+    "path": "./data/app.db"
+  }
 }

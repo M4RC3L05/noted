@@ -3,8 +3,10 @@ import { makeLogger } from "../../common/logger/mod.ts";
 import { gracefulShutdown } from "../../common/process/mod.ts";
 import { makeDatabase } from "../../database/mod.ts";
 import { makeApp } from "./app.ts";
+import config from "config";
 
 const log = makeLogger("api");
+const { host, port } = config.get("apps.api");
 const shutdown = new HookDrain({
   log,
   onFinishDrain: (error) => {
@@ -28,8 +30,8 @@ const db = makeDatabase();
 const app = makeApp({ db, signal: shutdown.signal });
 
 const server = Deno.serve({
-  hostname: "0.0.0.0",
-  port: 4321,
+  hostname: host,
+  port,
   onListen: ({ hostname, port }) => {
     log.info(`Serving on http://${hostname}:${port}`);
   },
