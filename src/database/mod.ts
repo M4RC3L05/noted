@@ -3,6 +3,7 @@ import { mapKeys } from "@std/collections";
 import { toCamelCase as camelCase } from "@std/text";
 import { TSqlFragment } from "@m4rc3l05/sqlite-tag";
 import { ulid } from "@std/ulid";
+import config from "config";
 
 const toCamelCase = <T>(data: unknown) => {
   if (Array.isArray(data)) {
@@ -55,7 +56,7 @@ export class CustomDatabase extends Database {
 }
 
 export const makeDatabase = () => {
-  const db = new CustomDatabase("./data/app.db");
+  const db = new CustomDatabase(config.get("database.path"));
 
   db.exec("pragma journal_mode = WAL");
   db.exec("pragma busy_timeout = 5000");
