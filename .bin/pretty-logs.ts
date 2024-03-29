@@ -38,11 +38,11 @@ for await (const line of stdinByLines) {
     continue;
   }
 
-  const { dateTime, name, level, message, ...rest } = jsonParsed;
+  const { datetime, name, level, message, ...rest } = jsonParsed;
 
-  if (dateTime && name && level) {
+  if (datetime && name && level) {
     console.log(
-      `%c[${dateTime}] %c(${name}) %c${level}: %c${message}%c${
+      `%c[${datetime}] %c(${name}) %c${level}: %c${message}%c${
         Object.keys(rest ?? {}).length > 0
           ? `\n${
             Deno.inspect(rest, {

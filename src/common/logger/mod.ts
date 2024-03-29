@@ -4,8 +4,8 @@ const isPlainObject = (arg: unknown): arg is Record<string, unknown> =>
   arg !== null && arg !== undefined &&
   Object.getPrototypeOf(arg) === Object.prototype;
 
-const formatError = (error: Error) => ({
-  cause: error.cause,
+const formatError = (error: Error): Record<string, unknown> => ({
+  cause: error.cause instanceof Error ? formatError(error.cause) : error.cause,
   message: error.message,
   name: error.name,
   stack: error.stack,
@@ -23,7 +23,7 @@ const logFormatter = (
   { args, datetime, levelName, loggerName, msg }: LogRecord,
 ) => {
   const payload = {
-    dateTime: datetime.toISOString(),
+    datetime: datetime.toISOString(),
     level: levelName,
     name: loggerName,
     message: msg,
