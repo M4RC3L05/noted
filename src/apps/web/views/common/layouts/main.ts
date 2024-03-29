@@ -44,21 +44,6 @@ const MainLayout = <B extends BodyComponent>({
       <body>
         ${Body?.(props)}
 
-        <script type="importmap">
-          {
-            "imports": {
-              "marked": "https://esm.sh/v135/marked@12.0.1"
-            }
-          }
-        </script>
-        <script type="module">
-          const replaceAndReload = (url) => {
-            history.replaceState(null, null, url);
-            location.reload();
-          }
-
-          window.replaceAndReload = replaceAndReload;
-        </script>
         ${Scripts?.map((Script) => Script(props))}
       </body>
 
