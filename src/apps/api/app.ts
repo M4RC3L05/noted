@@ -1,11 +1,11 @@
 import { Hono, HTTPException } from "hono";
 import { CustomDatabase } from "../../database/mod.ts";
 import { sql } from "@m4rc3l05/sqlite-tag";
-import { z } from "zod";
 import { basicAuth, cors } from "hono/middleware.ts";
 import config from "config";
 import { errorMapper } from "../../common/middlewares/mod.ts";
 import { errorMappers } from "../../common/errors/mod.ts";
+import vine from "@vinejs/vine";
 
 declare module "hono" {
   interface ContextVariableMap {
@@ -36,10 +36,15 @@ export const makeApp = (
 
   app.use("*", cors());
   app.use("*", basicAuth({ ...basicAuthConfig }));
-  app.get("/api/notes", (c) => {
-    const { includeDeleted } = z.object({
-      includeDeleted: z.string().optional(),
-    }).strict().parse(c.req.query());
+
+  const getNotesQuerySchema = vine.object({
+    includeDeleted: vine.string().optional(),
+  });
+  const getNotesQueryValidator = vine.compile(getNotesQuerySchema);
+  app.get("/api/notes", async (c) => {
+    const { includeDeleted } = await getNotesQueryValidator.validate(
+      c.req.query(),
+    );
 
     const notes = c.get("db").all(
       sql`
@@ -58,8 +63,10 @@ export const makeApp = (
     return c.json({ data: notes });
   });
 
-  app.get("/api/notes/:id", (c) => {
-    const { id } = z.object({ id: z.string() }).strict().parse(c.req.param());
+  const getNoteParamsSchema = vine.object({ id: vine.string() });
+  const getNoteParamsValidator = vine.compile(getNoteParamsSchema);
+  app.get("/api/notes/:id", async (c) => {
+    const { id } = await getNoteParamsValidator.validate(c.req.param());
 
     const note = c.get("db").get(sql`select * from notes where id = ${id}`);
 
@@ -70,12 +77,15 @@ export const makeApp = (
     return c.json({ data: note });
   });
 
+  const createNoteBodySchema = vine.object({
+    name: vine.string().minLength(1).trim(),
+    content: vine.string().optional(),
+  });
+  const createNoteBodyValidator = vine.compile(createNoteBodySchema);
   app.post("/api/notes", async (c) => {
-    const { content, name } = z.object({
-      name: z.string().min(1).trim(),
-      content: z.string().optional(),
-    })
-      .strict().parse(await c.req.json());
+    const { content, name } = await createNoteBodyValidator.validate(
+      await c.req.json(),
+    );
 
     const note = c.get("db").get(sql`
       insert into notes ${sql.insert({ content, name })}
@@ -85,34 +95,34 @@ export const makeApp = (
     return c.json({ data: note }, 201);
   });
 
+  const editNoteParamsSchema = vine.object({ id: vine.string() });
+  const editNoteParamsValidator = vine.compile(editNoteParamsSchema);
+  const editNoteBodySchema = vine.object({
+    name: vine.string().minLength(1).trim().optional().requiredIfMissing([
+      "content",
+      "delete",
+    ]),
+    content: vine.string().optional().requiredIfMissing(["name", "delete"]),
+    delete: vine.boolean().optional().requiredIfMissing(["name", "content"]),
+  });
+  const editNoteBodyValidator = vine.compile(editNoteBodySchema);
   app.patch(
     "/api/notes/:id",
     async (c) => {
-      const { id } = z.object({ id: z.string() }).strict().parse(c.req.param());
-      const { content, name, delete: del } = z.object({
-        name: z.string().min(1).trim(),
-        content: z.string().optional(),
-        delete: z.boolean().optional(),
-      })
-        .strict().superRefine((data, ctx) => {
-          if (Object.keys(data).length <= 0) {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: "At least one prop must be provided",
-            });
-          }
-        }).parse(await c.req.json());
+      const { id } = await editNoteParamsValidator.validate(c.req.param());
+      const { content, name, delete: del } = await editNoteBodyValidator
+        .validate(await c.req.json());
 
       const note = c.get("db").get(sql`
         update notes
-        set
-          ${sql.if(typeof name === "string", () => sql`name = ${name}`)}
-          ${
-        sql.if(typeof content === "string", () => sql`,content = ${content}`)
-      }
-          ${
-        sql.if(typeof del === "boolean", () =>
-          sql`deleted_at = ${del ? new Date().toISOString() : null}`)
+        set ${
+        sql.set({
+          name,
+          content,
+          deleted_at: typeof del === "boolean"
+            ? del ? new Date().toISOString() : null
+            : undefined,
+        })
       }
         where id = ${id}
         returning *;
@@ -122,8 +132,10 @@ export const makeApp = (
     },
   );
 
-  app.delete("/api/notes/:id", (c) => {
-    const { id } = z.object({ id: z.string() }).strict().parse(c.req.param());
+  const deleteNoteParamsSchema = vine.object({ id: vine.string() });
+  const deleteNoteParamsValidator = vine.compile(deleteNoteParamsSchema);
+  app.delete("/api/notes/:id", async (c) => {
+    const { id } = await deleteNoteParamsValidator.validate(c.req.param());
 
     const result = c.get("db").execute(sql`delete from notes where id = ${id}`);
 
