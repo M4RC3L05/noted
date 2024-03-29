@@ -5,6 +5,7 @@ const isPlainObject = (arg: unknown): arg is Record<string, unknown> =>
   Object.getPrototypeOf(arg) === Object.prototype;
 
 const formatError = (error: Error): Record<string, unknown> => ({
+  ...error,
   cause: error.cause instanceof Error ? formatError(error.cause) : error.cause,
   message: error.message,
   name: error.name,
