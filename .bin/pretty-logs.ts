@@ -59,7 +59,7 @@ for await (const line of stdinByLines) {
       "color:lightpink",
       "color:orange",
       levelColor[level as LevelName],
-      "color:green",
+      "color:default",
       "color:reset",
     );
   } else {
