@@ -3,12 +3,15 @@ import { basicAuth, secureHeaders } from "hono/middleware.ts";
 import config from "config";
 import { makeLogger } from "../../common/logger/mod.ts";
 import { notesViews } from "./views/mod.ts";
-import { encodeBase64 } from "@std/encoding/base64";
 import { parse } from "marked";
+import { NotesService } from "./services/notes-service.ts";
 
 declare module "hono" {
   interface ContextVariableMap {
     shutdown: AbortSignal;
+    services: {
+      notesService: NotesService;
+    };
   }
 }
 
@@ -32,6 +35,11 @@ export const makeApp = (
       }
     }
 
+    // Redirect back on request that alter the application state.
+    if (!["GET", "HEAD", "OPTIONS"].includes(c.req.method)) {
+      return c.redirect(c.req.header("Referer") ?? "/");
+    }
+
     return c.text(
       error.message ?? "Something broke",
       // deno-lint-ignore no-explicit-any
@@ -45,6 +53,12 @@ export const makeApp = (
 
   app.use("*", (c, next) => {
     c.set("shutdown", signal);
+    c.set("services", {
+      notesService: new NotesService(
+        servicesConfig.api.url,
+        servicesConfig.api.basicAuth,
+      ),
+    });
 
     return next();
   });
@@ -67,20 +81,9 @@ export const makeApp = (
   app.use("*", basicAuth({ ...basicAuthConfig }));
 
   app.get("/", async (c) => {
-    const { data: notes } = await fetch(`${servicesConfig.api.url}/api/notes`, {
-      headers: {
-        "authorization": `Basic ${
-          encodeBase64(
-            `${servicesConfig.api.basicAuth.username}:${servicesConfig.api.basicAuth.password}`,
-          )
-        }`,
-      },
-      signal: AbortSignal.any([
-        AbortSignal.timeout(10_000),
-        c.get("shutdown"),
-        c.req.raw.signal,
-      ]),
-    }).then((response) => response.json());
+    const { data: notes } = await c.get("services").notesService.getNotes({
+      signal: AbortSignal.any([c.get("shutdown"), c.req.raw.signal]),
+    });
 
     return c.html(notesViews.pages.Index({ notes: notes }));
   });
@@ -88,121 +91,40 @@ export const makeApp = (
   app.post("/notes/create", async (c) => {
     const data = await c.req.formData();
 
-    try {
-      const { data: note } = await fetch(
-        `${servicesConfig.api.url}/api/notes`,
-        {
-          method: "POST",
-          body: JSON.stringify(Object.fromEntries(data)),
-          headers: {
-            "content-type": "application/json",
-            "authorization": `Basic ${
-              encodeBase64(
-                `${servicesConfig.api.basicAuth.username}:${servicesConfig.api.basicAuth.password}`,
-              )
-            }`,
-          },
-          signal: AbortSignal.any([
-            AbortSignal.timeout(10_000),
-            c.get("shutdown"),
-            c.req.raw.signal,
-          ]),
-        },
-      ).then((response) => response.json())
-        .then(({ error, data }) => {
-          if (error) {
-            throw new Error("error");
-          }
+    const { data: note } = await c.get("services").notesService.createNote({
+      data: Object.fromEntries(data),
+      signal: AbortSignal.any([c.get("shutdown"), c.req.raw.signal]),
+    });
 
-          return { data };
-        });
-
-      return c.redirect(`/notes/${note.id}/edit`);
-    } catch {
-      return c.redirect(c.req.header("Referer") ?? "/");
-    }
+    return c.redirect(`/notes/${note.id}/edit`);
   });
   app.get("/notes/:id/edit", async (c) => {
     const { id } = c.req.param();
-    const { data: note } = await fetch(
-      `${servicesConfig.api.url}/api/notes/${id}`,
-      {
-        headers: {
-          "authorization": `Basic ${
-            encodeBase64(
-              `${servicesConfig.api.basicAuth.username}:${servicesConfig.api.basicAuth.password}`,
-            )
-          }`,
-        },
-        signal: AbortSignal.any([
-          AbortSignal.timeout(10_000),
-          c.get("shutdown"),
-          c.req.raw.signal,
-        ]),
-      },
-    ).then((response) => response.json());
+    const { data: note } = await c.get("services").notesService.getNote({
+      id,
+      signal: AbortSignal.any([c.get("shutdown"), c.req.raw.signal]),
+    });
 
-    return c.html(
-      notesViews.pages.Edit({ note: note }),
-    );
+    return c.html(notesViews.pages.Edit({ note: note }));
   });
   app.post("/notes/:id/edit", async (c) => {
     const { id } = c.req.param();
     const data = await c.req.formData();
 
-    try {
-      const { data: note } = await fetch(
-        `${servicesConfig.api.url}/api/notes/${id}`,
-        {
-          method: "PATCH",
-          body: JSON.stringify(Object.fromEntries(data)),
-          headers: {
-            "content-type": "application/json",
-            "authorization": `Basic ${
-              encodeBase64(
-                `${servicesConfig.api.basicAuth.username}:${servicesConfig.api.basicAuth.password}`,
-              )
-            }`,
-          },
-          signal: AbortSignal.any([
-            AbortSignal.timeout(10_000),
-            c.get("shutdown"),
-            c.req.raw.signal,
-          ]),
-        },
-      ).then((response) => response.json())
-        .then(({ error, data }) => {
-          if (error) {
-            throw new Error("error");
-          }
+    const { data: note } = await c.get("services").notesService.editNote({
+      data: Object.fromEntries(data),
+      id,
+      signal: AbortSignal.any([c.get("shutdown"), c.req.raw.signal]),
+    });
 
-          return { data };
-        });
-
-      return c.redirect(`/notes/${note.id}`);
-    } catch {
-      return c.redirect(c.req.header("Referer") ?? "/");
-    }
+    return c.redirect(`/notes/${note.id}`);
   });
   app.get("/notes/:id", async (c) => {
     const { id } = c.req.param();
-    const { data: note } = await fetch(
-      `${servicesConfig.api.url}/api/notes/${id}`,
-      {
-        headers: {
-          "authorization": `Basic ${
-            encodeBase64(
-              `${servicesConfig.api.basicAuth.username}:${servicesConfig.api.basicAuth.password}`,
-            )
-          }`,
-        },
-        signal: AbortSignal.any([
-          AbortSignal.timeout(10_000),
-          c.get("shutdown"),
-          c.req.raw.signal,
-        ]),
-      },
-    ).then((response) => response.json());
+    const { data: note } = await c.get("services").notesService.getNote({
+      id,
+      signal: AbortSignal.any([c.get("shutdown"), c.req.raw.signal]),
+    });
 
     return c.html(
       notesViews.pages.Show({
@@ -214,24 +136,10 @@ export const makeApp = (
   app.post("/notes/:id/delete", async (c) => {
     const { id } = c.req.param();
 
-    await fetch(
-      `${servicesConfig.api.url}/api/notes/${id}`,
-      {
-        method: "DELETE",
-        headers: {
-          "authorization": `Basic ${
-            encodeBase64(
-              `${servicesConfig.api.basicAuth.username}:${servicesConfig.api.basicAuth.password}`,
-            )
-          }`,
-        },
-        signal: AbortSignal.any([
-          AbortSignal.timeout(10_000),
-          c.get("shutdown"),
-          c.req.raw.signal,
-        ]),
-      },
-    );
+    await c.get("services").notesService.deleteNote({
+      id,
+      signal: AbortSignal.any([c.get("shutdown"), c.req.raw.signal]),
+    });
 
     return c.redirect(c.req.header("Referer") ?? "/");
   });
