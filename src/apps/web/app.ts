@@ -69,7 +69,7 @@ export const makeApp = (
 
   app.use(
     "*",
-    secureHeaders({ referrerPolicy: "strict-origin-when-cross-origin" }),
+    secureHeaders({ referrerPolicy: "same-origin" }),
   );
   app.use("*", async (c, next) => {
     try {
