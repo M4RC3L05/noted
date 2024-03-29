@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { CustomDatabase } from "../../database/mod.ts";
 import { basicAuth } from "hono/basic-auth";
+import { secureHeaders } from "hono/secure-headers";
 import { cors } from "hono/cors";
 import config from "config";
 import { errorMapper } from "#src/common/middlewares/mod.ts";
@@ -34,6 +35,7 @@ export const makeApp = (
     return next();
   });
 
+  app.use("*", secureHeaders());
   app.use("*", cors());
   app.use("*", basicAuth({ ...basicAuthConfig }));
 
