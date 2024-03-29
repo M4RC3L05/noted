@@ -14,6 +14,7 @@ declare module "hono" {
 
 const log = makeLogger("web");
 const basicAuthConfig = config.get("apps.web.basicAuth");
+const servicesConfig = config.get("apps.web.services");
 
 export const makeApp = (
   { signal }: { signal: AbortSignal },
@@ -66,11 +67,11 @@ export const makeApp = (
   app.use("*", basicAuth({ ...basicAuthConfig }));
 
   app.get("/", async (c) => {
-    const { data: notes } = await fetch("http://127.0.0.1:4321/api/notes", {
+    const { data: notes } = await fetch(`${servicesConfig.api.url}/api/notes`, {
       headers: {
         "authorization": `Basic ${
           encodeBase64(
-            `${basicAuthConfig.username}:${basicAuthConfig.password}`,
+            `${servicesConfig.api.basicAuth.username}:${servicesConfig.api.basicAuth.password}`,
           )
         }`,
       },
@@ -89,7 +90,7 @@ export const makeApp = (
 
     try {
       const { data: note } = await fetch(
-        "http://127.0.0.1:4321/api/notes",
+        `${servicesConfig.api.url}/api/notes`,
         {
           method: "POST",
           body: JSON.stringify(Object.fromEntries(data)),
@@ -97,7 +98,7 @@ export const makeApp = (
             "content-type": "application/json",
             "authorization": `Basic ${
               encodeBase64(
-                `${basicAuthConfig.username}:${basicAuthConfig.password}`,
+                `${servicesConfig.api.basicAuth.username}:${servicesConfig.api.basicAuth.password}`,
               )
             }`,
           },
@@ -124,12 +125,12 @@ export const makeApp = (
   app.get("/notes/:id/edit", async (c) => {
     const { id } = c.req.param();
     const { data: note } = await fetch(
-      `http://127.0.0.1:4321/api/notes/${id}`,
+      `${servicesConfig.api.url}/api/notes/${id}`,
       {
         headers: {
           "authorization": `Basic ${
             encodeBase64(
-              `${basicAuthConfig.username}:${basicAuthConfig.password}`,
+              `${servicesConfig.api.basicAuth.username}:${servicesConfig.api.basicAuth.password}`,
             )
           }`,
         },
@@ -151,7 +152,7 @@ export const makeApp = (
 
     try {
       const { data: note } = await fetch(
-        `http://127.0.0.1:4321/api/notes/${id}`,
+        `${servicesConfig.api.url}/api/notes/${id}`,
         {
           method: "PATCH",
           body: JSON.stringify(Object.fromEntries(data)),
@@ -159,7 +160,7 @@ export const makeApp = (
             "content-type": "application/json",
             "authorization": `Basic ${
               encodeBase64(
-                `${basicAuthConfig.username}:${basicAuthConfig.password}`,
+                `${servicesConfig.api.basicAuth.username}:${servicesConfig.api.basicAuth.password}`,
               )
             }`,
           },
@@ -186,12 +187,12 @@ export const makeApp = (
   app.get("/notes/:id", async (c) => {
     const { id } = c.req.param();
     const { data: note } = await fetch(
-      `http://127.0.0.1:4321/api/notes/${id}`,
+      `${servicesConfig.api.url}/api/notes/${id}`,
       {
         headers: {
           "authorization": `Basic ${
             encodeBase64(
-              `${basicAuthConfig.username}:${basicAuthConfig.password}`,
+              `${servicesConfig.api.basicAuth.username}:${servicesConfig.api.basicAuth.password}`,
             )
           }`,
         },
@@ -214,13 +215,13 @@ export const makeApp = (
     const { id } = c.req.param();
 
     await fetch(
-      `http://127.0.0.1:4321/api/notes/${id}`,
+      `${servicesConfig.api.url}/api/notes/${id}`,
       {
         method: "DELETE",
         headers: {
           "authorization": `Basic ${
             encodeBase64(
-              `${basicAuthConfig.username}:${basicAuthConfig.password}`,
+              `${servicesConfig.api.basicAuth.username}:${servicesConfig.api.basicAuth.password}`,
             )
           }`,
         },
