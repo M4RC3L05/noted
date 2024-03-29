@@ -4,6 +4,10 @@ import { layouts } from "../../common/mod.ts";
 const NotesCreatePage = () =>
   html`
   <header>
+    <nav>
+      <a href="/">Home</a>
+    </nav>
+
     <h1>Create note</h1>
   </header>
 

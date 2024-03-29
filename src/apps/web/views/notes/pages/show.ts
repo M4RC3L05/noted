@@ -10,6 +10,10 @@ type NotesShowPageProps = {
 const NotesShowPage = ({ note, rendered }: NotesShowPageProps) =>
   html`
   <header>
+    <nav>
+      <a href="/">Home</a>
+    </nav>
+
     <h1>${note.name}</h1>
   </header>
 

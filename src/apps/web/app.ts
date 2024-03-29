@@ -121,6 +121,68 @@ export const makeApp = (
       return c.redirect(c.req.header("Referer") ?? "/");
     }
   });
+  app.get("/notes/:id/edit", async (c) => {
+    const { id } = c.req.param();
+    const { data: note } = await fetch(
+      `http://127.0.0.1:4321/api/notes/${id}`,
+      {
+        headers: {
+          "authorization": `Basic ${
+            encodeBase64(
+              `${basicAuthConfig.username}:${basicAuthConfig.password}`,
+            )
+          }`,
+        },
+        signal: AbortSignal.any([
+          AbortSignal.timeout(10_000),
+          c.get("shutdown"),
+          c.req.raw.signal,
+        ]),
+      },
+    ).then((response) => response.json());
+
+    return c.html(
+      notesViews.pages.Edit({ note: note }),
+    );
+  });
+  app.post("/notes/:id/edit", async (c) => {
+    const { id } = c.req.param();
+    const data = await c.req.formData();
+
+    try {
+      const { data: note } = await fetch(
+        `http://127.0.0.1:4321/api/notes/${id}`,
+        {
+          method: "PATCH",
+          body: JSON.stringify(Object.fromEntries(data)),
+          headers: {
+            "content-type": "application/json",
+            "authorization": `Basic ${
+              encodeBase64(
+                `${basicAuthConfig.username}:${basicAuthConfig.password}`,
+              )
+            }`,
+          },
+          signal: AbortSignal.any([
+            AbortSignal.timeout(10_000),
+            c.get("shutdown"),
+            c.req.raw.signal,
+          ]),
+        },
+      ).then((response) => response.json())
+        .then(({ error, data }) => {
+          if (error) {
+            throw new Error("error");
+          }
+
+          return { data };
+        });
+
+      return c.redirect(`/notes/${note.id}`);
+    } catch {
+      return c.redirect(c.req.header("Referer") ?? "/");
+    }
+  });
   app.get("/notes/:id", async (c) => {
     const { id } = c.req.param();
     const { data: note } = await fetch(
