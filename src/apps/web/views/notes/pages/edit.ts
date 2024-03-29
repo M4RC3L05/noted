@@ -21,7 +21,7 @@ const NotesEditPage = ({ note }: NotesEditPageProps) =>
       <form action="/notes/${note.id}/edit" method="POST">
         <div>
           <label for="name">Name</label>
-          <input type="text" id="name" placeholder="Note name" name="name" value=${note.name} />
+          <input type="text" id="name" placeholder="Note name" name="name" value="${note.name}" />
         </div>
 
         <div>
@@ -33,7 +33,6 @@ const NotesEditPage = ({ note }: NotesEditPageProps) =>
               placeholder="Write something"
               rows="5"
               oninput="this.parentNode.dataset.replicatedValue = this.value"
-              onload="this.parentNode.dataset.replicatedValue = this.value"
             >${note.content}</textarea>
           </div>
         </div>
@@ -79,4 +78,17 @@ export default layouts.MainLayout({
     `,
   ],
   Body: NotesEditPage,
+  Scripts: [
+    () =>
+      html`
+      <script type="module">
+        document.addEventListener("DOMContentLoaded", () => {
+          const ele = document.getElementById("content");
+          const data = ele.value;
+
+          ele.parentNode.dataset.replicatedValue = ele.value;
+        })
+      </script>
+    `,
+  ],
 });
