@@ -72,7 +72,7 @@ export const makeApp = (
 
   app.post("/api/notes", async (c) => {
     const { content, name } = z.object({
-      name: z.string(),
+      name: z.string().min(1).trim(),
       content: z.string().optional(),
     })
       .strict().parse(await c.req.json());
@@ -90,7 +90,7 @@ export const makeApp = (
     async (c) => {
       const { id } = z.object({ id: z.string() }).strict().parse(c.req.param());
       const { content, name, delete: del } = z.object({
-        name: z.string().optional(),
+        name: z.string().min(1).trim(),
         content: z.string().optional(),
         delete: z.boolean().optional(),
       })

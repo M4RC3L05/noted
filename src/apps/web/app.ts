@@ -48,7 +48,21 @@ export const makeApp = (
     return next();
   });
 
-  app.use("*", secureHeaders());
+  app.use(
+    "*",
+    secureHeaders({ referrerPolicy: "strict-origin-when-cross-origin" }),
+  );
+  app.use("*", async (c, next) => {
+    try {
+      await next();
+    } finally {
+      // This is important so that we always make sure the browser will not cache the previous page
+      // so that the requests are always made.
+      c.header("cache-control", "no-cache, no-store, must-revalidate");
+      c.header("pragma", "no-cache");
+      c.header("expires", "0");
+    }
+  });
   app.use("*", basicAuth({ ...basicAuthConfig }));
 
   app.get("/", async (c) => {
@@ -60,9 +74,52 @@ export const makeApp = (
           )
         }`,
       },
+      signal: AbortSignal.any([
+        AbortSignal.timeout(10_000),
+        c.get("shutdown"),
+        c.req.raw.signal,
+      ]),
     }).then((response) => response.json());
 
     return c.html(notesViews.pages.Index({ notes: notes }));
+  });
+  app.get("/notes/create", (c) => c.html(notesViews.pages.Create()));
+  app.post("/notes/create", async (c) => {
+    const data = await c.req.formData();
+
+    try {
+      const { data: note } = await fetch(
+        "http://127.0.0.1:4321/api/notes",
+        {
+          method: "POST",
+          body: JSON.stringify(Object.fromEntries(data)),
+          headers: {
+            "content-type": "application/json",
+            "authorization": `Basic ${
+              encodeBase64(
+                `${basicAuthConfig.username}:${basicAuthConfig.password}`,
+              )
+            }`,
+          },
+          signal: AbortSignal.any([
+            AbortSignal.timeout(10_000),
+            c.get("shutdown"),
+            c.req.raw.signal,
+          ]),
+        },
+      ).then((response) => response.json())
+        .then(({ error, data }) => {
+          if (error) {
+            throw new Error("error");
+          }
+
+          return { data };
+        });
+
+      return c.redirect(`/notes/${note.id}/edit`);
+    } catch {
+      return c.redirect(c.req.header("Referer") ?? "/");
+    }
   });
   app.get("/notes/:id", async (c) => {
     const { id } = c.req.param();
@@ -76,6 +133,11 @@ export const makeApp = (
             )
           }`,
         },
+        signal: AbortSignal.any([
+          AbortSignal.timeout(10_000),
+          c.get("shutdown"),
+          c.req.raw.signal,
+        ]),
       },
     ).then((response) => response.json());
 
