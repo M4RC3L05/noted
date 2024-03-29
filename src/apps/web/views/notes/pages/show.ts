@@ -1,6 +1,6 @@
 import { html, raw } from "hono/html";
-import { layouts } from "../../common/mod.ts";
-import { NotesTable } from "../../../../../database/types/mod.ts";
+import { layouts } from "#src/apps/web/views/common/mod.ts";
+import { NotesTable } from "#src/database/types/mod.ts";
 
 type NotesShowPageProps = {
   note: NotesTable;

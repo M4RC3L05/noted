@@ -1,5 +1,5 @@
 import { html } from "hono/html";
-import { layouts } from "../../common/mod.ts";
+import { layouts } from "#src/apps/web/views/common/mod.ts";
 
 const NotesCreatePage = () =>
   html`

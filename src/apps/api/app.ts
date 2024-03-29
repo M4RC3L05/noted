@@ -3,9 +3,9 @@ import { CustomDatabase } from "../../database/mod.ts";
 import { basicAuth } from "hono/basic-auth";
 import { cors } from "hono/cors";
 import config from "config";
-import { errorMapper } from "../../common/middlewares/mod.ts";
-import { errorMappers } from "../../common/errors/mod.ts";
-import { router } from "./routes/mod.ts";
+import { errorMapper } from "#src/common/middlewares/mod.ts";
+import { errorMappers } from "#src/common/errors/mod.ts";
+import { router } from "#src/apps/api/routes/mod.ts";
 
 declare module "hono" {
   interface ContextVariableMap {

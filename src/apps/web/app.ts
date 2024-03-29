@@ -4,10 +4,10 @@ import { basicAuth } from "hono/basic-auth";
 import { secureHeaders } from "hono/secure-headers";
 import { serveStatic } from "hono/deno";
 import config from "config";
-import { makeLogger } from "../../common/logger/mod.ts";
-import { notesViews } from "./views/mod.ts";
+import { makeLogger } from "#src/common/logger/mod.ts";
+import { notesViews } from "#src/apps/web/views/mod.ts";
 import { parse } from "marked";
-import { NotesService } from "./services/mod.ts";
+import { NotesService } from "#src/apps/web/services/mod.ts";
 
 declare module "hono" {
   interface ContextVariableMap {

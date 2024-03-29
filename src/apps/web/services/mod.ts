@@ -1,1 +1,1 @@
-export { NotesService } from "./notes-service.ts";
+export { NotesService } from "#src/apps/web/services/notes-service.ts";

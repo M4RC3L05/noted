@@ -9,6 +9,7 @@
     "deps": "deno cache --reload --lock=deno.lock src/**/*.ts ./.bin/*.ts"
   },
   "imports": {
+    "#src/": "./src/",
     "@db/sqlite": "jsr:@db/sqlite@0.11.1",
     "@m4rc3l05/sqlite-tag": "jsr:@m4rc3l05/sqlite-tag@0.1.7",
     "@std/async": "jsr:@std/async@0.220.1",
