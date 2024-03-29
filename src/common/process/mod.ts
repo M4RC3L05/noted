@@ -15,11 +15,15 @@ export const gracefulShutdown = (
   globalThis.addEventListener("unhandledrejection", (e) => {
     log.error("Unhandled rejection captured", { reason: e.reason });
 
+    e.preventDefault();
+
     hookDrain.drain();
   });
 
   globalThis.addEventListener("error", (e) => {
     log.error("Unhandled error captured", { error: e.error });
+
+    e.preventDefault();
 
     hookDrain.drain();
   });
