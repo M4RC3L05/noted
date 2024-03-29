@@ -5,9 +5,8 @@ import { secureHeaders } from "hono/secure-headers";
 import { serveStatic } from "hono/deno";
 import config from "config";
 import { makeLogger } from "#src/common/logger/mod.ts";
-import { notesViews } from "#src/apps/web/views/mod.ts";
-import { parse } from "marked";
 import { NotesService } from "#src/apps/web/services/mod.ts";
+import { router } from "#src/apps/web/routes/mod.ts";
 
 declare module "hono" {
   interface ContextVariableMap {
@@ -25,6 +24,13 @@ const servicesConfig = config.get("apps.web.services");
 export const makeApp = (
   { signal }: { signal: AbortSignal },
 ) => {
+  const services = {
+    notesService: new NotesService(
+      servicesConfig.api.url,
+      servicesConfig.api.basicAuth,
+    ),
+  };
+
   const app = new Hono();
 
   app.onError((error, c) => {
@@ -56,12 +62,7 @@ export const makeApp = (
 
   app.use("*", (c, next) => {
     c.set("shutdown", signal);
-    c.set("services", {
-      notesService: new NotesService(
-        servicesConfig.api.url,
-        servicesConfig.api.basicAuth,
-      ),
-    });
+    c.set("services", services);
 
     return next();
   });
@@ -87,69 +88,5 @@ export const makeApp = (
     serveStatic({ path: "./src/apps/web/public/favicon.ico" }),
   );
 
-  app.get("/", async (c) => {
-    const { data: notes } = await c.get("services").notesService.getNotes({
-      signal: AbortSignal.any([c.get("shutdown"), c.req.raw.signal]),
-    });
-
-    return c.html(notesViews.pages.Index({ notes: notes }));
-  });
-  app.get("/notes/create", (c) => c.html(notesViews.pages.Create()));
-  app.post("/notes/create", async (c) => {
-    const data = await c.req.formData();
-
-    const { data: note } = await c.get("services").notesService.createNote({
-      data: Object.fromEntries(data),
-      signal: AbortSignal.any([c.get("shutdown"), c.req.raw.signal]),
-    });
-
-    return c.redirect(`/notes/${note.id}/edit`);
-  });
-  app.get("/notes/:id/edit", async (c) => {
-    const { id } = c.req.param();
-    const { data: note } = await c.get("services").notesService.getNote({
-      id,
-      signal: AbortSignal.any([c.get("shutdown"), c.req.raw.signal]),
-    });
-
-    return c.html(notesViews.pages.Edit({ note: note }));
-  });
-  app.post("/notes/:id/edit", async (c) => {
-    const { id } = c.req.param();
-    const data = await c.req.formData();
-
-    const { data: note } = await c.get("services").notesService.editNote({
-      data: Object.fromEntries(data),
-      id,
-      signal: AbortSignal.any([c.get("shutdown"), c.req.raw.signal]),
-    });
-
-    return c.redirect(`/notes/${note.id}`);
-  });
-  app.get("/notes/:id", async (c) => {
-    const { id } = c.req.param();
-    const { data: note } = await c.get("services").notesService.getNote({
-      id,
-      signal: AbortSignal.any([c.get("shutdown"), c.req.raw.signal]),
-    });
-
-    return c.html(
-      notesViews.pages.Show({
-        note: note,
-        rendered: await parse(note.content ?? ""),
-      }),
-    );
-  });
-  app.post("/notes/:id/delete", async (c) => {
-    const { id } = c.req.param();
-
-    await c.get("services").notesService.deleteNote({
-      id,
-      signal: AbortSignal.any([c.get("shutdown"), c.req.raw.signal]),
-    });
-
-    return c.redirect(c.req.header("Referer") ?? "/");
-  });
-
-  return app;
+  return app.route("/", router());
 };
