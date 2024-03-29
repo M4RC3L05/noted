@@ -28,9 +28,10 @@ export abstract class BaseService {
       }),
     ).then((response) => {
       if (response.status === 204) return;
+
       if (!response.headers.get("content-type")?.includes("application/json")) {
         if (!response.ok) {
-          throw new Error("Request error", { cause: response });
+          throw new Error("Request not ok", { cause: response });
         }
 
         return;
@@ -40,9 +41,11 @@ export abstract class BaseService {
     }).then((data) => {
       if (!data) return;
 
-      if (data.error) throw new Error("Request error", { cause: data });
+      if (data.error) throw new Error("Bad request", { cause: data.error });
 
       return data;
+    }).catch((error) => {
+      throw new Error("Request error", { cause: error });
     });
   }
 }
