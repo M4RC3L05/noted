@@ -23,7 +23,12 @@ const NotesIndexPage = ({ notes }: NotesIndexPageProps) =>
         <article>
           <h2>${note.name}</h2>
 
-          <a href="/notes/${note.id}">Show</a>
+          <div style="display: flex" class="note-actions">
+            <a class="button" href="/notes/${note.id}" style="margin-right: 8px">Show</a>
+            <form method="POST" action="/notes/${note.id}/delete">
+              <input type="submit" value="Delete ⨯">
+            </form>
+          </div>
         </article>
       `
     )
@@ -38,8 +43,9 @@ export default layouts.MainLayout({
       html`
       <style>
         #header-actions .button,
-        .feed-actions .button,
-        .feed-actions button {
+        .note-actions .button,
+        .note-actions button,
+        .note-actions input[type="submit"] {
           font-size: .8rem;
           font-weight: bold;
           padding: .5rem .7rem;

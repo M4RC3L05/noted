@@ -33,9 +33,7 @@ export default layouts.MainLayout({
     () =>
       html`
       <style>
-        #header-actions .button,
-        .feed-actions .button,
-        .feed-actions button {
+        #header-actions .button {
           font-size: .8rem;
           font-weight: bold;
           padding: .5rem .7rem;

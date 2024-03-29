@@ -210,6 +210,30 @@ export const makeApp = (
       }),
     );
   });
+  app.post("/notes/:id/delete", async (c) => {
+    const { id } = c.req.param();
+
+    await fetch(
+      `http://127.0.0.1:4321/api/notes/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "authorization": `Basic ${
+            encodeBase64(
+              `${basicAuthConfig.username}:${basicAuthConfig.password}`,
+            )
+          }`,
+        },
+        signal: AbortSignal.any([
+          AbortSignal.timeout(10_000),
+          c.get("shutdown"),
+          c.req.raw.signal,
+        ]),
+      },
+    );
+
+    return c.redirect(c.req.header("Referer") ?? "/");
+  });
 
   return app;
 };
