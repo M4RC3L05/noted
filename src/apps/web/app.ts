@@ -1,5 +1,8 @@
-import { Hono, HTTPException } from "hono";
-import { basicAuth, secureHeaders, serveStatic } from "hono/middleware.ts";
+import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception";
+import { basicAuth } from "hono/basic-auth";
+import { secureHeaders } from "hono/secure-headers";
+import { serveStatic } from "hono/deno";
 import config from "config";
 import { makeLogger } from "../../common/logger/mod.ts";
 import { notesViews } from "./views/mod.ts";

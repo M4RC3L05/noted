@@ -1,4 +1,4 @@
-import { html, raw } from "hono/helper.ts";
+import { html, raw } from "hono/html";
 import { layouts } from "../../common/mod.ts";
 import { NotesTable } from "../../../../../database/types/mod.ts";
 

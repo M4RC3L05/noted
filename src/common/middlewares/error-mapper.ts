@@ -1,4 +1,5 @@
-import { Context, HTTPException } from "hono";
+import { Context } from "hono";
+import { HTTPException } from "hono/http-exception";
 import { makeLogger } from "../logger/mod.ts";
 import { toSnakeCase } from "@std/text";
 

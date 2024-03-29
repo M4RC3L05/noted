@@ -1,4 +1,4 @@
-import { HTTPException } from "hono";
+import { HTTPException } from "hono/http-exception";
 
 const defaultErrorMapper = (error: unknown) => {
   return Object.assign(

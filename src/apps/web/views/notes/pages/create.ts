@@ -1,4 +1,4 @@
-import { html } from "hono/helper.ts";
+import { html } from "hono/html";
 import { layouts } from "../../common/mod.ts";
 
 const NotesCreatePage = () =>
