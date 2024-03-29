@@ -1,10 +1,10 @@
 import { Hono, HTTPException } from "hono";
-import { basicAuth, secureHeaders } from "hono/middleware.ts";
+import { basicAuth, secureHeaders, serveStatic } from "hono/middleware.ts";
 import config from "config";
 import { makeLogger } from "../../common/logger/mod.ts";
 import { notesViews } from "./views/mod.ts";
 import { parse } from "marked";
-import { NotesService } from "./services/notes-service.ts";
+import { NotesService } from "./services/mod.ts";
 
 declare module "hono" {
   interface ContextVariableMap {
@@ -79,6 +79,10 @@ export const makeApp = (
     }
   });
   app.use("*", basicAuth({ ...basicAuthConfig }));
+  app.use(
+    "/favicon.ico",
+    serveStatic({ path: "./src/apps/web/public/favicon.ico" }),
+  );
 
   app.get("/", async (c) => {
     const { data: notes } = await c.get("services").notesService.getNotes({
