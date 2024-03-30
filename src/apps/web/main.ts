@@ -36,7 +36,7 @@ const server = Deno.serve({
 }, app.fetch);
 
 shutdown.registerHook({
-  name: "api",
+  name: "web",
   fn: async () => {
     await server.shutdown();
   },
