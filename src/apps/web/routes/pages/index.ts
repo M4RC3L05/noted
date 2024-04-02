@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import type { Hono } from "hono";
 import { notesViews } from "#src/apps/web/views/mod.ts";
 
 export const index = (app: Hono) => {

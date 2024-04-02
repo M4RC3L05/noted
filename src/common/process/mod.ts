@@ -1,5 +1,5 @@
-import { Logger } from "@std/log";
-import { HookDrain } from "./hook-drain.ts";
+import type { Logger } from "@std/log";
+import type { HookDrain } from "./hook-drain.ts";
 
 export const gracefulShutdown = (
   { hookDrain, log }: { hookDrain: HookDrain; log: Logger },

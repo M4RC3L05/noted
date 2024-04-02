@@ -1,5 +1,5 @@
 import { html } from "hono/html";
-import { HtmlEscapedString } from "hono/utils/html";
+import type { HtmlEscapedString } from "hono/utils/html";
 
 // deno-lint-ignore no-explicit-any
 type Component<P extends Record<string, unknown> = any> = P extends Record<

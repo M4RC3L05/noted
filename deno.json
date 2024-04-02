@@ -8,6 +8,11 @@
     "deps:lock": "deno cache --lock=deno.lock --lock-write src/**/*.ts ./.bin/*.ts",
     "deps": "deno cache --reload --lock=deno.lock src/**/*.ts ./.bin/*.ts"
   },
+  "lint": {
+    "rules": {
+      "include": ["verbatim-module-syntax"]
+    }
+  },
   "imports": {
     "#src/": "./src/",
     "@db/sqlite": "jsr:@db/sqlite@0.11.1",

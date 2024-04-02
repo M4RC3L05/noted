@@ -1,4 +1,9 @@
-import { BaseHandler, ConsoleHandler, Logger, LogRecord } from "@std/log";
+import {
+  type BaseHandler,
+  ConsoleHandler,
+  Logger,
+  type LogRecord,
+} from "@std/log";
 
 const isPlainObject = (arg: unknown): arg is Record<string, unknown> =>
   arg !== null && arg !== undefined &&

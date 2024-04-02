@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { CustomDatabase } from "../../database/mod.ts";
+import type { CustomDatabase } from "../../database/mod.ts";
 import { basicAuth } from "hono/basic-auth";
 import { secureHeaders } from "hono/secure-headers";
 import { cors } from "hono/cors";

@@ -1,6 +1,6 @@
 #!/usr/bin/env -S deno run -A
 
-import { LevelName } from "@std/log";
+import type { LevelName } from "@std/log";
 import { TextLineStream } from "@std/streams";
 
 const jsonParse = (data: string) => {

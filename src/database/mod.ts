@@ -1,7 +1,7 @@
-import { Database, Statement } from "@db/sqlite";
+import { Database, type Statement } from "@db/sqlite";
 import { mapKeys } from "@std/collections";
 import { toCamelCase as camelCase } from "@std/text";
-import { TSqlFragment } from "@m4rc3l05/sqlite-tag";
+import type { TSqlFragment } from "@m4rc3l05/sqlite-tag";
 import { ulid } from "@std/ulid";
 import config from "config";
 

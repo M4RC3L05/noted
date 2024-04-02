@@ -1,7 +1,7 @@
-import { HookDrain } from "../../common/process/hook-drain.ts";
-import { makeLogger } from "../../common/logger/mod.ts";
-import { gracefulShutdown } from "../../common/process/mod.ts";
-import { makeDatabase } from "../../database/mod.ts";
+import { HookDrain } from "#src/common/process/hook-drain.ts";
+import { makeLogger } from "#src/common/logger/mod.ts";
+import { gracefulShutdown } from "#src/common/process/mod.ts";
+import { makeDatabase } from "#src/database/mod.ts";
 import { makeApp } from "./app.ts";
 import config from "config";
 

@@ -1,6 +1,6 @@
-import { Context } from "hono";
+import type { Context } from "hono";
 import { HTTPException } from "hono/http-exception";
-import { makeLogger } from "../logger/mod.ts";
+import { makeLogger } from "#src/common/logger/mod.ts";
 import { toSnakeCase } from "@std/text";
 
 type ErrorMapperDeps = {

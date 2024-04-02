@@ -1,4 +1,4 @@
-import { NotesTable } from "#src/database/types/mod.ts";
+import type { NotesTable } from "#src/database/types/mod.ts";
 import { BaseService } from "#src/apps/web/services/base-service.ts";
 
 export class NotesService extends BaseService {
