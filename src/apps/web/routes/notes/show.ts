@@ -7,7 +7,7 @@ export const show = (app: Hono) => {
     const { id } = c.req.param();
     const { data: note } = await c.get("services").notesService.getNote({
       id,
-      signal: AbortSignal.any([c.get("shutdown"), c.req.raw.signal]),
+      signal: c.req.raw.signal,
     });
 
     return c.html(

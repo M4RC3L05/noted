@@ -6,7 +6,7 @@ export const edit = (app: Hono) => {
     const { id } = c.req.param();
     const { data: note } = await c.get("services").notesService.getNote({
       id,
-      signal: AbortSignal.any([c.get("shutdown"), c.req.raw.signal]),
+      signal: c.req.raw.signal,
     });
 
     return c.html(notesViews.pages.Edit({ note: note }));
@@ -19,7 +19,7 @@ export const edit = (app: Hono) => {
     const { data: note } = await c.get("services").notesService.editNote({
       data: Object.fromEntries(data),
       id,
-      signal: AbortSignal.any([c.get("shutdown"), c.req.raw.signal]),
+      signal: c.req.raw.signal,
     });
 
     return c.redirect(`/notes/${note.id}`);

@@ -6,7 +6,7 @@ export const del = (app: Hono) => {
 
     await c.get("services").notesService.deleteNote({
       id,
-      signal: AbortSignal.any([c.get("shutdown"), c.req.raw.signal]),
+      signal: c.req.raw.signal,
     });
 
     return c.redirect(c.req.header("Referer") ?? "/");
