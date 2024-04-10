@@ -12,7 +12,7 @@ const NotesCreatePage = () =>
   </header>
 
   <main>
-    <form action="/notes/create" method="POST">
+    <form action="/notes/create" method="post">
       <div>
         <label for="name">Name</label>
         <input type="text" placeholder="Note name" name="name" />

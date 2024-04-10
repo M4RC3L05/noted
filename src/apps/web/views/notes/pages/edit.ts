@@ -18,7 +18,7 @@ const NotesEditPage = ({ note }: NotesEditPageProps) =>
 
   <main>
     <article>
-      <form action="/notes/${note.id}/edit" method="POST">
+      <form action="/notes/${note.id}/edit" method="post">
         <div>
           <label for="name">Name</label>
           <input type="text" id="name" placeholder="Note name" name="name" value="${note.name}" />

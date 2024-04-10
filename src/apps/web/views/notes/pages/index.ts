@@ -25,9 +25,31 @@ const NotesIndexPage = ({ notes }: NotesIndexPageProps) =>
 
           <div style="display: flex" class="note-actions">
             <a class="button" href="/notes/${note.id}" style="margin-right: 8px">Show</a>
-            <form method="POST" action="/notes/${note.id}/delete">
-              <input type="submit" value="Delete ⨯">
-            </form>
+
+            <dialog id="dialog-${note.id}">
+              <p>Are you sure you want to delete note "${note.name}"?</p>
+
+              <form
+                style="display: inline;"
+                action="/notes/${note.id}/delete"
+                method="post"
+              >
+                <button type="submit">
+                  Yes
+                </button>
+              </form>
+
+              <form method="dialog" style="display: inline; margin-right: 8px">
+                <button>No</button>
+              </form>
+            </dialog>
+
+            <button
+              style="display: inline; margin-right: 8px"
+              onclick="getElementById('dialog-${note.id}').show()"
+            >
+              Delete ⨯?
+            </button>
           </div>
         </article>
       `
