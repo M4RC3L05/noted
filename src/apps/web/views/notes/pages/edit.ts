@@ -26,15 +26,15 @@ const NotesEditPage = ({ note }: NotesEditPageProps) =>
 
         <div>
           <label for="content">Content</label>
-          <div class="grow-wrapper">
-            <textarea
-              id="content"
-              name="content"
-              placeholder="Write something"
-              rows="5"
-              oninput="this.parentNode.dataset.replicatedValue = this.value"
-            >${note.content}</textarea>
-          </div>
+          <textarea
+            id="content"
+            name="content"
+            placeholder="Write something"
+            rows="5"
+            style="overflow-y: hidden"
+            oninput="this.style.height = this.scrollHeight + 'px'"
+          >${note.content}</textarea>
+          <style onload="getElementById('content').style.height = getElementById('content').scrollHeight + 'px'"></style>
         </div>
 
         <input type="submit" value="Edit">
@@ -51,28 +51,6 @@ export default layouts.MainLayout({
 
         label {
           display: block;
-        }
-
-        .grow-wrapper {
-          display: grid;
-        }
-
-        .grow-wrapper::after {
-          content: attr(data-replicated-value) " ";
-          white-space: pre-wrap;
-          visibility: hidden;
-        }
-
-        .grow-wrapper > textarea {
-          resize: none;
-          overflow: hidden;
-        }
-        .grow-wrapper > textarea,
-        .grow-wrapper::after {
-          border: 1px solid black;
-          padding: 0.5rem;
-          font: inherit;
-          grid-area: 1 / 1 / 2 / 2;
         }
       </style>
     `,
