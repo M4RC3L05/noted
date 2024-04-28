@@ -12,6 +12,9 @@ const isPlainObject = (arg: unknown): arg is Record<string, unknown> =>
 const formatError = (error: Error): Record<string, unknown> => ({
   ...error,
   cause: error.cause instanceof Error ? formatError(error.cause) : error.cause,
+  errors: Array.isArray(error.errors)
+    ? error.errors.map((error) => formatError(error))
+    : undefined,
   message: error.message,
   name: error.name,
   stack: error.stack,
@@ -21,6 +24,7 @@ const formatLogArg = (arg: unknown) => {
   if (!isPlainObject(arg)) return;
 
   if (arg.error instanceof Error) arg.error = formatError(arg.error);
+  if (arg.reason instanceof Error) arg.reason = formatError(arg.reason);
 
   return arg;
 };

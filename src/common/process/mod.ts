@@ -1,14 +1,17 @@
 import type { Logger } from "@std/log";
-import type { HookDrain } from "./hook-drain.ts";
+import type { ProcessLifecycle } from "./process-lifecycle.ts";
 
 export const gracefulShutdown = (
-  { hookDrain, log }: { hookDrain: HookDrain; log: Logger },
+  { processLifecycle, log }: {
+    processLifecycle: ProcessLifecycle;
+    log: Logger;
+  },
 ) => {
   for (const signal of ["SIGABRT", "SIGTERM", "SIGINT"] as Deno.Signal[]) {
     Deno.addSignalListener(signal, () => {
       log.info(`OS Signal "${signal}" captured`);
 
-      hookDrain.drain();
+      processLifecycle.shutdown();
     });
   }
 
@@ -17,7 +20,7 @@ export const gracefulShutdown = (
 
     e.preventDefault();
 
-    hookDrain.drain();
+    processLifecycle.shutdown();
   });
 
   globalThis.addEventListener("error", (e) => {
@@ -25,6 +28,6 @@ export const gracefulShutdown = (
 
     e.preventDefault();
 
-    hookDrain.drain();
+    processLifecycle.shutdown();
   });
 };

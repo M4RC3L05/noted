@@ -1,4 +1,4 @@
-import { HookDrain } from "#src/common/process/hook-drain.ts";
+import { ProcessLifecycle } from "../../common/process/process-lifecycle.ts";
 import { makeLogger } from "#src/common/logger/mod.ts";
 import { gracefulShutdown } from "#src/common/process/mod.ts";
 import { makeApp } from "#src/apps/web/app.ts";
@@ -6,9 +6,9 @@ import config from "config";
 
 const log = makeLogger("web");
 const { host, port } = config.get("apps.web");
-const shutdown = new HookDrain({
+const processLifecycle = new ProcessLifecycle({
   log,
-  onFinishDrain: (error) => {
+  onFinishShutdown: (error) => {
     log.info("Exiting application");
 
     if (error.error) {
@@ -23,21 +23,24 @@ const shutdown = new HookDrain({
   },
 });
 
-gracefulShutdown({ hookDrain: shutdown, log });
+gracefulShutdown({ processLifecycle, log });
 
-const app = makeApp({ signal: shutdown.signal });
+processLifecycle.registerService({
+  name: "api",
+  boot: (pl) => {
+    const app = makeApp({ signal: pl.signal });
 
-const server = Deno.serve({
-  hostname: host,
-  port,
-  onListen: ({ hostname, port }) => {
-    log.info(`Serving on http://${hostname}:${port}`);
+    const server = Deno.serve({
+      hostname: host,
+      port,
+      onListen: ({ hostname, port }) => {
+        log.info(`Serving on http://${hostname}:${port}`);
+      },
+    }, app.fetch);
+
+    return server;
   },
-}, app.fetch);
-
-shutdown.registerHook({
-  name: "web",
-  fn: async () => {
-    await server.shutdown();
-  },
+  shutdown: (server) => server.shutdown(),
 });
+
+await processLifecycle.boot();
