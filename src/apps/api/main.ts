@@ -2,7 +2,7 @@ import { HookDrain } from "#src/common/process/hook-drain.ts";
 import { makeLogger } from "#src/common/logger/mod.ts";
 import { gracefulShutdown } from "#src/common/process/mod.ts";
 import { makeDatabase } from "#src/database/mod.ts";
-import { makeApp } from "./app.ts";
+import { makeApp } from "#src/apps/api/app.ts";
 import config from "config";
 
 const log = makeLogger("api");
