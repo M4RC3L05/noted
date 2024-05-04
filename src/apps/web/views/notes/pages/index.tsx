@@ -12,7 +12,7 @@ const ArticleItem: FC<{ note: NotesIndexPageProps["notes"][0] }> = (
     <h2>{note.name}</h2>
 
     <div style="display: flex" class="note-actions">
-      <a class="button" href="/notes/${note.id}" style="margin-right: 8px">
+      <a class="button" href={`/notes/${note.id}`} style="margin-right: 8px">
         Show
       </a>
 
