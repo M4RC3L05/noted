@@ -73,7 +73,6 @@ export const makeApp = (
     "*",
     secureHeaders({ referrerPolicy: "same-origin" }),
   );
-  app.get("*", jsxRenderer(MainLayout, { docType: true, stream: true }));
   app.use("*", async (c, next) => {
     try {
       await next();
@@ -97,6 +96,8 @@ export const makeApp = (
       rewriteRequestPath: (path) => path.replace("/public", ""),
     }),
   );
+
+  app.get("*", jsxRenderer(MainLayout, { docType: true, stream: true }));
 
   return app.route("/", router());
 };
