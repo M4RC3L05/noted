@@ -1,5 +1,5 @@
 import type { Hono } from "hono";
-import { notesViews } from "#src/apps/web/views/mod.ts";
+import { NotesEditPage } from "#src/apps/web/views/notes/pages/edit.tsx";
 
 export const edit = (app: Hono) => {
   app.get("/:id/edit", async (c) => {
@@ -9,7 +9,7 @@ export const edit = (app: Hono) => {
       signal: c.req.raw.signal,
     });
 
-    return c.html(notesViews.pages.Edit({ note: note }));
+    return c.render(<NotesEditPage note={note} />);
   });
 
   app.post("/:id/edit", async (c) => {

@@ -1,5 +1,5 @@
 import type { Hono } from "hono";
-import { notesViews } from "#src/apps/web/views/mod.ts";
+import { NotesIndexPage } from "#src/apps/web/views/notes/pages/index.tsx";
 
 export const index = (app: Hono) => {
   app.get("/", async (c) => {
@@ -7,6 +7,6 @@ export const index = (app: Hono) => {
       signal: c.req.raw.signal,
     });
 
-    return c.html(notesViews.pages.Index({ notes: notes }));
+    return c.render(<NotesIndexPage notes={notes} />);
   });
 };

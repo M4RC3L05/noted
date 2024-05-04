@@ -1,6 +1,6 @@
 import type { Hono } from "hono";
-import { notesViews } from "#src/apps/web/views/mod.ts";
 import { parse } from "marked";
+import { NotesShowPage } from "#src/apps/web/views/notes/pages/show.tsx";
 
 export const show = (app: Hono) => {
   app.get("/:id", async (c) => {
@@ -10,11 +10,8 @@ export const show = (app: Hono) => {
       signal: c.req.raw.signal,
     });
 
-    return c.html(
-      notesViews.pages.Show({
-        note: note,
-        rendered: await parse(note.content ?? ""),
-      }),
+    return c.render(
+      <NotesShowPage note={note} rendered={await parse(note.content ?? "")} />,
     );
   });
 };

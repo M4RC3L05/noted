@@ -3,10 +3,12 @@ import { HTTPException } from "hono/http-exception";
 import { basicAuth } from "hono/basic-auth";
 import { secureHeaders } from "hono/secure-headers";
 import { serveStatic } from "hono/deno";
+import { jsxRenderer } from "hono/jsx-renderer";
 import config from "config";
 import { makeLogger } from "#src/common/logger/mod.ts";
 import { NotesService } from "#src/apps/web/services/mod.ts";
 import { router } from "#src/apps/web/routes/mod.ts";
+import { MainLayout } from "#src/apps/web/views/common/layouts/main.tsx";
 
 declare module "hono" {
   interface ContextVariableMap {
@@ -71,6 +73,7 @@ export const makeApp = (
     "*",
     secureHeaders({ referrerPolicy: "same-origin" }),
   );
+  app.get("*", jsxRenderer(MainLayout, { docType: true, stream: true }));
   app.use("*", async (c, next) => {
     try {
       await next();
@@ -86,6 +89,13 @@ export const makeApp = (
   app.use(
     "/favicon.ico",
     serveStatic({ path: "./src/apps/web/public/favicon.ico" }),
+  );
+  app.get(
+    "/public/*",
+    serveStatic({
+      root: "./src/apps/web/public",
+      rewriteRequestPath: (path) => path.replace("/public", ""),
+    }),
   );
 
   return app.route("/", router());

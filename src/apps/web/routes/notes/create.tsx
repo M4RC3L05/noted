@@ -1,8 +1,8 @@
 import type { Hono } from "hono";
-import { notesViews } from "#src/apps/web/views/mod.ts";
+import { NotesCreatePage } from "#src/apps/web/views/notes/pages/create.tsx";
 
 export const create = (app: Hono) => {
-  app.get("/create", (c) => c.html(notesViews.pages.Create()));
+  app.get("/create", (c) => c.render(<NotesCreatePage />));
 
   app.post("/create", async (c) => {
     const data = await c.req.formData();
