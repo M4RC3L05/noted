@@ -41,8 +41,6 @@ export const NotesEditPage: FC<NotesEditPageProps> = ({ note }) => (
             >
               {note.content}
             </textarea>
-            <style onload="getElementById('content').style.height = getElementById('content').scrollHeight + 'px'">
-            </style>
           </div>
 
           <input type="submit" value="Edit" />
@@ -50,12 +48,14 @@ export const NotesEditPage: FC<NotesEditPageProps> = ({ note }) => (
       </article>
     </main>
     <script
+      type="module"
       dangerouslySetInnerHTML={{
         __html: `
           document.addEventListener("DOMContentLoaded", () => {
             const ele = document.getElementById("content");
             const data = ele.value;
 
+            ele.style.height = ele.scrollHeight + 'px';
             ele.parentNode.dataset.replicatedValue = ele.value;
           })
         `,
