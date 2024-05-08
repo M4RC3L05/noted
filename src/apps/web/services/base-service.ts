@@ -6,20 +6,20 @@ import * as requesterComposers from "@m4rc3l05/requester/composers";
 export abstract class BaseService {
   #baseUrl: string;
   #auth: { username: string; password: string };
-  #requester: ReturnType<Requester["build"]>;
+  #requester: Requester;
 
   constructor(baseUrl: string, auth: { username: string; password: string }) {
     this.#baseUrl = baseUrl;
     this.#auth = auth;
     this.#requester = new Requester().with(
       requesterComposers.timeout({ ms: 10000 }),
-    ).build();
+    );
   }
 
   request(
     { path, init }: { path: string; init?: Parameters<typeof fetch>[1] },
   ) {
-    return this.#requester(
+    return this.#requester.fetch(
       `${this.#baseUrl}${path}`,
       // deno-lint-ignore no-explicit-any
       deepMerge((init ?? {}) as any, {
