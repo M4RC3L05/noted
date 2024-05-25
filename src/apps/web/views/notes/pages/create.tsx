@@ -5,6 +5,7 @@ export const NotesCreatePage: FC = () => (
     <header>
       <nav>
         <a href="/">Home</a>
+        <a href="/trash">Trash 🗑</a>
       </nav>
 
       <h1>Create note</h1>

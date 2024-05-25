@@ -22,6 +22,10 @@ export const edit = (app: Hono) => {
       signal: c.req.raw.signal,
     });
 
-    return c.redirect(`/notes/${note.id}`);
+    if (!data.has("delete")) {
+      return c.redirect(`/notes/${note.id}`);
+    }
+
+    return c.redirect(c.req.header("Referer") ?? "/");
   });
 };

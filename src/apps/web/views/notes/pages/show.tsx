@@ -11,6 +11,7 @@ export const NotesShowPage: FC<NotesShowPageProps> = ({ note, rendered }) => (
     <header>
       <nav>
         <a href="/">Home</a>
+        <a href="/trash">Trash 🗑</a>
       </nav>
 
       <h1>{note.name}</h1>

@@ -10,6 +10,7 @@ export const NotesEditPage: FC<NotesEditPageProps> = ({ note }) => (
     <header>
       <nav>
         <a href="/">Home</a>
+        <a href="/trash">Trash 🗑</a>
       </nav>
 
       <h1>Edit {note.name}</h1>

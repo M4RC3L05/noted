@@ -3,9 +3,20 @@ import { BaseService } from "#src/apps/web/services/base-service.ts";
 
 export class NotesService extends BaseService {
   getNotes(
-    { signal }: { signal: AbortSignal },
+    { trashed, signal }: {
+      signal: AbortSignal;
+      trashed?: boolean;
+    },
   ): Promise<{ data: Omit<NotesTable, "content">[] }> {
-    return this.request({ path: "/api/notes", init: { signal } });
+    const searchParams = new URLSearchParams();
+    if (trashed) searchParams.set("trashed", "true");
+
+    return this.request({
+      path: `/api/notes${
+        searchParams.size > 0 ? `?${searchParams.toString()}` : ``
+      }`,
+      init: { signal },
+    });
   }
 
   getNote({ id, signal }: { id: string; signal: AbortSignal }) {
@@ -47,6 +58,13 @@ export class NotesService extends BaseService {
   deleteNote({ id, signal }: { id: string; signal: AbortSignal }) {
     return this.request({
       path: `/api/notes/${id}`,
+      init: { signal, method: "DELETE" },
+    });
+  }
+
+  deleteTrashed({ signal }: { signal: AbortSignal }) {
+    return this.request({
+      path: `/api/notes/trashed`,
       init: { signal, method: "DELETE" },
     });
   }
