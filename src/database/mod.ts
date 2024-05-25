@@ -2,7 +2,6 @@ import { Database, type Statement } from "@db/sqlite";
 import { mapKeys } from "@std/collections";
 import { toCamelCase as camelCase } from "@std/text";
 import type { TSqlFragment } from "@m4rc3l05/sqlite-tag";
-import { ulid } from "@std/ulid";
 import config from "config";
 
 const toCamelCase = <T>(data: unknown) => {
@@ -65,7 +64,7 @@ export const makeDatabase = () => {
   db.exec("pragma temp_store = MEMORY");
   // 4096 page_size * 10000 pages (cache_size) ≃ 40MB
   db.exec("pragma cache_size = 10000");
-  db.function("uuid_v4", () => ulid());
+  db.function("uuid_v4", () => crypto.randomUUID());
 
   return db;
 };
