@@ -22,21 +22,20 @@ export const patch = (app: Hono) => {
       const { id } = await editNoteParamsValidator.validate(c.req.param());
       const { content, name, delete: del } = await editNoteBodyValidator
         .validate(await c.req.json());
+      const updateData = {
+        name,
+        content,
+        deleted_at: typeof del === "boolean"
+          ? del ? new Date().toISOString() : null
+          : undefined,
+      };
 
       const note = c.get("db").get(sql`
-          update notes
-          set ${
-        sql.set({
-          name,
-          content,
-          deleted_at: typeof del === "boolean"
-            ? del ? new Date().toISOString() : null
-            : undefined,
-        })
-      }
-          where id = ${id}
-          returning *;
-        `);
+        update notes
+        set ${sql.set(updateData)}
+        where id = ${id}
+        returning *;
+      `);
 
       return c.json({ data: note });
     },

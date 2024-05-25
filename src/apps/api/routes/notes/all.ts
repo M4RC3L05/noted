@@ -12,18 +12,15 @@ export const all = (app: Hono) => {
     const { includeDeleted } = await getNotesQueryValidator.validate(
       c.req.query(),
     );
+    const showDeleted = typeof includeDeleted === "string";
 
     const notes = c.get("db").all(
       sql`
         select
-          id, name, created_at, updated_at ${
-        sql.if(typeof includeDeleted === "string", () => sql`,deleted_at`)
-      }
+          id, name, created_at, updated_at
+          ${sql.if(showDeleted, () => sql`, deleted_at`)}
         from notes
-        ${
-        sql.if(typeof includeDeleted !== "string", () =>
-          sql`where deleted_at is null`)
-      }
+          ${sql.if(showDeleted, () => sql`where deleted_at is null`)}
         order by updated_at desc`,
     );
 
