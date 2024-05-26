@@ -124,9 +124,20 @@ export const NotesIndexPage: FC<NotesIndexPageProps> = ({ notes, trash }) => (
           </>
         )
         : (
-          <a href="/notes/create" class="button" style="margin-right: 8px">
-            Add note +
-          </a>
+          <>
+            <a href="/notes/create" class="button" style="margin-right: 8px">
+              Add note +
+            </a>
+
+            <a
+              href="/notes/export"
+              class="button"
+              style="margin-right: 8px"
+              target="_blank"
+            >
+              Export ↧
+            </a>
+          </>
         )}
     </header>
 

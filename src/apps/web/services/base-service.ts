@@ -17,7 +17,11 @@ export abstract class BaseService {
   }
 
   request(
-    { path, init }: { path: string; init?: Parameters<typeof fetch>[1] },
+    { path, init, sendResponse }: {
+      path: string;
+      init?: Parameters<typeof fetch>[1];
+      sendResponse?: boolean;
+    },
   ) {
     return this.#requester.fetch(
       `${this.#baseUrl}${path}`,
@@ -33,6 +37,7 @@ export abstract class BaseService {
           : AbortSignal.timeout(10_000),
       }),
     ).then((response) => {
+      if (sendResponse) return response;
       if (response.status === 204) return;
 
       if (!response.headers.get("content-type")?.includes("application/json")) {
@@ -45,6 +50,7 @@ export abstract class BaseService {
 
       return response.json();
     }).then((data) => {
+      if (sendResponse) return data;
       if (!data) return;
 
       if (data.error) throw new Error("Bad request", { cause: data.error });

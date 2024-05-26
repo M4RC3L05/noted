@@ -1,4 +1,4 @@
-import { Database, type Statement } from "@db/sqlite";
+import { Database, Statement } from "@db/sqlite";
 import { mapKeys } from "@std/collections";
 import { toCamelCase as camelCase } from "@std/text";
 import type { TSqlFragment } from "@m4rc3l05/sqlite-tag";
@@ -19,17 +19,31 @@ const toCamelCase = <T>(data: unknown) => {
   return data as T;
 };
 
-export class CustomDatabase extends Database {
-  #cache = new Map<string, Statement>();
+// deno-lint-ignore no-explicit-any
+class CustomStmt<T = any> extends Statement {
+  override *[Symbol.iterator](): IterableIterator<T> {
+    for (const item of super[Symbol.iterator]()) {
+      yield toCamelCase(item);
+    }
+  }
+}
 
-  #ensureInCache(query: string) {
+export class CustomDatabase extends Database {
+  #cache = new Map<string, CustomStmt>();
+
+  // deno-lint-ignore no-explicit-any
+  #ensureInCache<T = any>(query: string) {
     const key = query.trim();
 
     if (!this.#cache.has(key)) {
       this.#cache.set(key, this.prepare(key));
     }
 
-    return this.#cache.get(key) as Statement;
+    return this.#cache.get(key) as CustomStmt<T>;
+  }
+
+  override prepare(sql: string): CustomStmt {
+    return new CustomStmt(this, sql);
   }
 
   get<T>(query: TSqlFragment): T | undefined {
@@ -51,6 +65,11 @@ export class CustomDatabase extends Database {
 
     // deno-lint-ignore no-explicit-any
     return prepared.run(...query.params as any);
+  }
+
+  // deno-lint-ignore no-explicit-any
+  getPrepared<T = any>(query: TSqlFragment) {
+    return this.#ensureInCache<T>(query.query);
   }
 }
 

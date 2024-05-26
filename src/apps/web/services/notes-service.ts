@@ -68,4 +68,12 @@ export class NotesService extends BaseService {
       init: { signal, method: "DELETE" },
     });
   }
+
+  export({ signal }: { signal: AbortSignal }) {
+    return this.request({
+      path: "/api/notes/export",
+      init: { signal },
+      sendResponse: true,
+    });
+  }
 }
