@@ -11,9 +11,11 @@
       "jsr:@std/assert@^0.217.0": "jsr:@std/assert@0.217.0",
       "jsr:@std/assert@^0.221.0": "jsr:@std/assert@0.221.0",
       "jsr:@std/assert@^0.224.0": "jsr:@std/assert@0.224.0",
+      "jsr:@std/assert@^0.225.3": "jsr:@std/assert@0.225.3",
       "jsr:@std/bytes@^0.224.0": "jsr:@std/bytes@0.224.0",
+      "jsr:@std/bytes@^1.0.0-rc.3": "jsr:@std/bytes@1.0.0-rc.3",
       "jsr:@std/collections@0.224.0": "jsr:@std/collections@0.224.0",
-      "jsr:@std/encoding@0.224.0": "jsr:@std/encoding@0.224.0",
+      "jsr:@std/encoding@0.224.2": "jsr:@std/encoding@0.224.2",
       "jsr:@std/encoding@^0.221.0": "jsr:@std/encoding@0.221.0",
       "jsr:@std/fmt@^0.221.0": "jsr:@std/fmt@0.221.0",
       "jsr:@std/fmt@^0.224.0": "jsr:@std/fmt@0.224.0",
@@ -24,12 +26,12 @@
       "jsr:@std/log@0.224.0": "jsr:@std/log@0.224.0",
       "jsr:@std/path@0.217": "jsr:@std/path@0.217.0",
       "jsr:@std/path@^0.221.0": "jsr:@std/path@0.221.0",
-      "jsr:@std/streams@0.224.0": "jsr:@std/streams@0.224.0",
+      "jsr:@std/streams@0.224.1": "jsr:@std/streams@0.224.1",
       "jsr:@std/text@0.224.0": "jsr:@std/text@0.224.0",
       "npm:@types/node": "npm:@types/node@18.16.19",
       "npm:@vinejs/vine@2.0.0": "npm:@vinejs/vine@2.0.0",
       "npm:config@3.3.11": "npm:config@3.3.11",
-      "npm:hono@4.3.5": "npm:hono@4.3.5",
+      "npm:hono@4.3.11": "npm:hono@4.3.11",
       "npm:marked@12.0.2": "npm:marked@12.0.2"
     },
     "jsr": {
@@ -74,8 +76,14 @@
       "@std/assert@0.224.0": {
         "integrity": "8643233ec7aec38a940a8264a6e3eed9bfa44e7a71cc6b3c8874213ff401967f"
       },
+      "@std/assert@0.225.3": {
+        "integrity": "b3c2847aecf6955b50644cdb9cf072004ea3d1998dd7579fc0acb99dbb23bd4f"
+      },
       "@std/bytes@0.224.0": {
         "integrity": "a2250e1d0eb7d1c5a426f21267ab9bdeac2447fa87a3d0d1a467d3f7a6058e49"
+      },
+      "@std/bytes@1.0.0-rc.3": {
+        "integrity": "b3e93f73f1ccf167124f695596d2d026b0030930c38bd0ddec81d7f75ab41948"
       },
       "@std/collections@0.224.0": {
         "integrity": "d00201d1833c6e05371c7e9f0b178522597b1dda0b0a9ecf0c579414e1dd2770"
@@ -83,8 +91,8 @@
       "@std/encoding@0.221.0": {
         "integrity": "d1dd76ef0dc5d14088411e6dc1dede53bf8308c95d1537df1214c97137208e45"
       },
-      "@std/encoding@0.224.0": {
-        "integrity": "efb6dca97d3e9c31392bd5c8cfd9f9fc9decf5a1f4d1f78af7900a493bcf89b5"
+      "@std/encoding@0.224.2": {
+        "integrity": "bd9ef45d6028296440005804db7fc8fcc86e72fc1a19bb77684fb39c4a613672"
       },
       "@std/fmt@0.221.0": {
         "integrity": "379fed69bdd9731110f26b9085aeb740606b20428ce6af31ef6bd45ef8efa62a"
@@ -130,11 +138,11 @@
           "jsr:@std/assert@^0.221.0"
         ]
       },
-      "@std/streams@0.224.0": {
-        "integrity": "9c21feb45113abfc67dd536029624d1792d56dfbb029b8c1baf4ad5a2c35769e",
+      "@std/streams@0.224.1": {
+        "integrity": "e8565a376ae3888f60770cd09e480952ec7c349007aed81b8f7165424ce2195f",
         "dependencies": [
-          "jsr:@std/assert@^0.224.0",
-          "jsr:@std/bytes@^0.224.0",
+          "jsr:@std/assert@^0.225.3",
+          "jsr:@std/bytes@^1.0.0-rc.3",
           "jsr:@std/io@^0.224.0"
         ]
       },
@@ -193,8 +201,8 @@
         "integrity": "sha512-+HlytyjlPKnIG8XuRG8WvmBP8xs8P71y+SKKS6ZXWoEgLuePxtDoUEiH7WkdePWrQ5JBpE6aoVqfZfJUQkjXwA==",
         "dependencies": {}
       },
-      "hono@4.3.5": {
-        "integrity": "sha512-uiyrxCoklnpUMwRif6smNUp2psn7tfe0NP2B5/7N0U24yqQZJOPVUbpmp5apsaAf4sYFAX/eW06GoV/9srtNhQ==",
+      "hono@4.3.11": {
+        "integrity": "sha512-Hle1uNqJJKkebFkFEEWr3UAElJP922Xy0STfl8c+1PH1q+l6WrmhwAJFS6YH8ZWJY4z46qJtssbyVwwPm3dP5w==",
         "dependencies": {}
       },
       "json5@2.2.3": {
@@ -223,16 +231,16 @@
       "jsr:@m4rc3l05/requester@0.4.0",
       "jsr:@m4rc3l05/sqlite-tag@0.1.7",
       "jsr:@std/archive@0.224.0",
-      "jsr:@std/async@0.224.0",
+      "jsr:@std/async@0.224.1",
       "jsr:@std/collections@0.224.0",
-      "jsr:@std/encoding@0.224.0",
+      "jsr:@std/encoding@0.224.2",
       "jsr:@std/io@0.224.0",
       "jsr:@std/log@0.224.0",
-      "jsr:@std/streams@0.224.0",
+      "jsr:@std/streams@0.224.1",
       "jsr:@std/text@0.224.0",
       "npm:@vinejs/vine@2.0.0",
       "npm:config@3.3.11",
-      "npm:hono@4.3.5",
+      "npm:hono@4.3.11",
       "npm:marked@12.0.2"
     ]
   }
