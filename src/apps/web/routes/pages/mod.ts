@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import { Hono } from "@hono/hono";
 import { index } from "#src/apps/web/routes/pages/index.tsx";
 import { trash } from "#src/apps/web/routes/pages/trash.tsx";
 

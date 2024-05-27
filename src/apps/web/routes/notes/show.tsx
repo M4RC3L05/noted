@@ -1,4 +1,4 @@
-import type { Hono } from "hono";
+import type { Hono } from "@hono/hono";
 import { parse } from "marked";
 import { NotesShowPage } from "#src/apps/web/views/notes/pages/show.tsx";
 

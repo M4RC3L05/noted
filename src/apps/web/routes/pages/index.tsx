@@ -1,4 +1,4 @@
-import type { Hono } from "hono";
+import type { Hono } from "@hono/hono";
 import { NotesIndexPage } from "#src/apps/web/views/notes/pages/index.tsx";
 
 export const index = (app: Hono) => {

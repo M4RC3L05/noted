@@ -1,4 +1,4 @@
-import type { Hono } from "hono";
+import type { Hono } from "@hono/hono";
 
 export const del = (app: Hono) => {
   app.post("/:id/delete", async (c) => {

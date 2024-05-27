@@ -1,4 +1,4 @@
-import type { Hono } from "hono";
+import type { Hono } from "@hono/hono";
 import { sql } from "@m4rc3l05/sqlite-tag";
 import { Tar } from "@std/archive";
 import { Buffer } from "@std/io/buffer";

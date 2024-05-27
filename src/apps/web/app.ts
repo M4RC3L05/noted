@@ -1,16 +1,17 @@
-import { Hono } from "hono";
-import { HTTPException } from "hono/http-exception";
-import { basicAuth } from "hono/basic-auth";
-import { secureHeaders } from "hono/secure-headers";
-import { serveStatic } from "hono/deno";
-import { jsxRenderer } from "hono/jsx-renderer";
-import config from "config";
+import { type ContextVariableMap, Hono } from "@hono/hono";
+import { HTTPException } from "@hono/hono/http-exception";
+import { basicAuth } from "@hono/hono/basic-auth";
+import { secureHeaders } from "@hono/hono/secure-headers";
+import { serveStatic } from "@hono/hono/deno";
+import { jsxRenderer } from "@hono/hono/jsx-renderer";
 import { makeLogger } from "#src/common/logger/mod.ts";
-import { NotesService } from "#src/apps/web/services/mod.ts";
+import type { NotesService } from "#src/apps/web/services/mod.ts";
 import { router } from "#src/apps/web/routes/mod.ts";
 import { MainLayout } from "#src/apps/web/views/common/layouts/main.tsx";
+import { serviceRegister } from "#src/common/middlewares/mod.ts";
+import config from "config";
 
-declare module "hono" {
+declare module "@hono/hono" {
   interface ContextVariableMap {
     shutdown: AbortSignal;
     services: {
@@ -21,18 +22,8 @@ declare module "hono" {
 
 const log = makeLogger("web");
 const basicAuthConfig = config.get("apps.web.basicAuth");
-const servicesConfig = config.get("apps.web.services");
 
-export const makeApp = (
-  { signal }: { signal: AbortSignal },
-) => {
-  const services = {
-    notesService: new NotesService(
-      servicesConfig.api.url,
-      servicesConfig.api.basicAuth,
-    ),
-  };
-
+export const makeApp = (deps: Partial<ContextVariableMap>) => {
   const app = new Hono();
 
   app.onError((error, c) => {
@@ -62,12 +53,7 @@ export const makeApp = (
     throw new HTTPException(404, { message: "Route not found" });
   });
 
-  app.use("*", (c, next) => {
-    c.set("shutdown", signal);
-    c.set("services", services);
-
-    return next();
-  });
+  app.use("*", serviceRegister(deps));
 
   app.use(
     "*",

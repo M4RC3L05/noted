@@ -3,6 +3,7 @@ import { gracefulShutdown } from "#src/common/process/mod.ts";
 import { makeApp } from "#src/apps/web/app.ts";
 import config from "config";
 import { ProcessLifecycle } from "@m4rc3l05/process-lifecycle";
+import { NotesService } from "#src/apps/web/services/mod.ts";
 
 const log = makeLogger("web");
 const { host, port } = config.get("apps.web");
@@ -13,7 +14,16 @@ gracefulShutdown({ processLifecycle, log });
 processLifecycle.registerService({
   name: "api",
   boot: (pl) => {
-    const app = makeApp({ signal: pl.signal });
+    const servicesConfig = config.get("apps.web.services");
+
+    const services = {
+      notesService: new NotesService(
+        servicesConfig.api.url,
+        servicesConfig.api.basicAuth,
+      ),
+    };
+
+    const app = makeApp({ shutdown: pl.signal, services });
 
     const server = Deno.serve({
       hostname: host,

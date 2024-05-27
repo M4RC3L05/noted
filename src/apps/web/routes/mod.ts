@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import { Hono } from "@hono/hono";
 import { pagesRoutes } from "#src/apps/web/routes/pages/mod.ts";
 import { notesRoutes } from "#src/apps/web/routes/notes/mod.ts";
 

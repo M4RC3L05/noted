@@ -1,4 +1,4 @@
-import type { Hono } from "hono";
+import type { Hono } from "@hono/hono";
 import { NotesEditPage } from "#src/apps/web/views/notes/pages/edit.tsx";
 
 export const edit = (app: Hono) => {

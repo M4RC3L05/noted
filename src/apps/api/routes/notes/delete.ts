@@ -1,5 +1,5 @@
-import type { Hono } from "hono";
-import { HTTPException } from "hono/http-exception";
+import type { Hono } from "@hono/hono";
+import { HTTPException } from "@hono/hono/http-exception";
 import vine from "@vinejs/vine";
 import { sql } from "@m4rc3l05/sqlite-tag";
 

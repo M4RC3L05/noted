@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import { Hono } from "@hono/hono";
 import { create } from "#src/apps/web/routes/notes/create.tsx";
 import { edit } from "#src/apps/web/routes/notes/edit.tsx";
 import { show } from "#src/apps/web/routes/notes/show.tsx";

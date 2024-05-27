@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import { Hono } from "@hono/hono";
 import { all } from "#src/apps/api/routes/notes/all.ts";
 import { get } from "#src/apps/api/routes/notes/get.ts";
 import { create } from "#src/apps/api/routes/notes/create.ts";

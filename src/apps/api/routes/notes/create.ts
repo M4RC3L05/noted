@@ -1,4 +1,4 @@
-import type { Hono } from "hono";
+import type { Hono } from "@hono/hono";
 import vine from "@vinejs/vine";
 import { sql } from "@m4rc3l05/sqlite-tag";
 
