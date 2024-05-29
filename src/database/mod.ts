@@ -30,7 +30,7 @@ class CustomStmt<T = unknown> extends Statement {
 export class CustomDatabase extends Database {
   #cache = new Map<string, CustomStmt>();
 
-  #ensureInCache<T = unknown>(query: string) {
+  #ensureInCache<T>(query: string) {
     const key = query.trim();
 
     if (!this.#cache.has(key)) {
@@ -40,8 +40,8 @@ export class CustomDatabase extends Database {
     return this.#cache.get(key) as CustomStmt<T>;
   }
 
-  override prepare(sql: string): CustomStmt {
-    return new CustomStmt(this, sql);
+  override prepare<T>(sql: string): CustomStmt<T> {
+    return new CustomStmt<T>(this, sql);
   }
 
   get<T>(query: SqlFragment): T | undefined {
@@ -65,7 +65,9 @@ export class CustomDatabase extends Database {
   }
 
   getPrepared<T>(query: SqlFragment) {
-    return this.#ensureInCache<T>(query.query);
+    return this.prepare<T>(query.query).bind(
+      ...query.params as RestBindParameters,
+    );
   }
 }
 
