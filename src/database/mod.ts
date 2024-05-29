@@ -1,7 +1,7 @@
-import { Database, Statement } from "@db/sqlite";
+import { Database, type RestBindParameters, Statement } from "@db/sqlite";
 import { mapKeys } from "@std/collections";
 import { toCamelCase as camelCase } from "@std/text";
-import type { TSqlFragment } from "@m4rc3l05/sqlite-tag";
+import type { SqlFragment } from "@m4rc3l05/sqlite-tag";
 import config from "config";
 
 const toCamelCase = <T>(data: unknown) => {
@@ -19,8 +19,7 @@ const toCamelCase = <T>(data: unknown) => {
   return data as T;
 };
 
-// deno-lint-ignore no-explicit-any
-class CustomStmt<T = any> extends Statement {
+class CustomStmt<T = unknown> extends Statement {
   override *[Symbol.iterator](): IterableIterator<T> {
     for (const item of super[Symbol.iterator]()) {
       yield toCamelCase(item);
@@ -31,8 +30,7 @@ class CustomStmt<T = any> extends Statement {
 export class CustomDatabase extends Database {
   #cache = new Map<string, CustomStmt>();
 
-  // deno-lint-ignore no-explicit-any
-  #ensureInCache<T = any>(query: string) {
+  #ensureInCache<T = unknown>(query: string) {
     const key = query.trim();
 
     if (!this.#cache.has(key)) {
@@ -46,29 +44,27 @@ export class CustomDatabase extends Database {
     return new CustomStmt(this, sql);
   }
 
-  get<T>(query: TSqlFragment): T | undefined {
+  get<T>(query: SqlFragment): T | undefined {
     const prepared = this.#ensureInCache(query.query);
 
-    // deno-lint-ignore no-explicit-any
-    return toCamelCase<T>(prepared.get(...query.params as any));
+    return toCamelCase<T>(prepared.get(...query.params as RestBindParameters));
   }
 
-  all<T>(query: TSqlFragment): T[] {
+  all<T>(query: SqlFragment): T[] {
     const prepared = this.#ensureInCache(query.query);
 
-    // deno-lint-ignore no-explicit-any
-    return toCamelCase<T[]>(prepared.all(...query.params as any));
+    return toCamelCase<T[]>(
+      prepared.all(...query.params as RestBindParameters),
+    );
   }
 
-  execute(query: TSqlFragment) {
+  execute(query: SqlFragment) {
     const prepared = this.#ensureInCache(query.query);
 
-    // deno-lint-ignore no-explicit-any
-    return prepared.run(...query.params as any);
+    return prepared.run(...query.params as RestBindParameters);
   }
 
-  // deno-lint-ignore no-explicit-any
-  getPrepared<T = any>(query: TSqlFragment) {
+  getPrepared<T>(query: SqlFragment) {
     return this.#ensureInCache<T>(query.query);
   }
 }
