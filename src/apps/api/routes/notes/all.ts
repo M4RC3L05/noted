@@ -10,20 +10,21 @@ export const all = (app: Hono) => {
     const { trashed } = await getNotesQueryValidator.validate(
       c.req.query(),
     );
-    const showTrashed = typeof trashed === "string";
+
+    const where = sql.ternary(
+      typeof trashed === "string",
+      sql`where deleted_at is not null`,
+      sql`where deleted_at is null`,
+    );
 
     const notes = c.get("db").all(
       sql`
         select
           id, name, created_at, updated_at
-          ${sql.if(showTrashed, () => sql`, deleted_at`)}
         from notes
-          ${
-        sql.ternary(showTrashed, () =>
-          sql`where deleted_at is not null`, () =>
-          sql`where deleted_at is null`)
-      }
-        order by updated_at desc`,
+          ${where}
+        order by updated_at desc
+      `,
     );
 
     return c.json({ data: notes });
