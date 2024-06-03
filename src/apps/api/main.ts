@@ -22,7 +22,7 @@ processLifecycle.registerService({
   boot: (pl) => {
     const app = makeApp({
       db: pl.getService<CustomDatabase>("db"),
-      signal: pl.signal,
+      shutdown: pl.signal,
     });
 
     const server = Deno.serve({
