@@ -5,12 +5,14 @@
       "jsr:@db/sqlite@0.11.1": "jsr:@db/sqlite@0.11.1",
       "jsr:@denosaurs/plug@1": "jsr:@denosaurs/plug@1.0.6",
       "jsr:@hono/hono@4.4.4": "jsr:@hono/hono@4.4.4",
+      "jsr:@m4rc3l05/cron@1.1.0": "jsr:@m4rc3l05/cron@1.1.0",
       "jsr:@m4rc3l05/process-lifecycle@0.1.0": "jsr:@m4rc3l05/process-lifecycle@0.1.0",
       "jsr:@m4rc3l05/requester@0.4.0": "jsr:@m4rc3l05/requester@0.4.0",
       "jsr:@m4rc3l05/sqlite-tag@0.2.0": "jsr:@m4rc3l05/sqlite-tag@0.2.0",
       "jsr:@std/archive@0.224.1": "jsr:@std/archive@0.224.1",
       "jsr:@std/assert@^0.217.0": "jsr:@std/assert@0.217.0",
       "jsr:@std/assert@^0.221.0": "jsr:@std/assert@0.221.0",
+      "jsr:@std/async@0.220.1": "jsr:@std/async@0.220.1",
       "jsr:@std/bytes@^1.0.0-rc.3": "jsr:@std/bytes@1.0.0",
       "jsr:@std/collections@0.224.2": "jsr:@std/collections@0.224.2",
       "jsr:@std/encoding@0.224.3": "jsr:@std/encoding@0.224.3",
@@ -29,6 +31,8 @@
       "jsr:@std/text@0.224.3": "jsr:@std/text@0.224.3",
       "npm:@vinejs/vine@2.1.0": "npm:@vinejs/vine@2.1.0",
       "npm:config@3.3.11": "npm:config@3.3.11",
+      "npm:cron-parser@4.9.0": "npm:cron-parser@4.9.0",
+      "npm:dayjs@1.11.10": "npm:dayjs@1.11.10",
       "npm:marked@12.0.2": "npm:marked@12.0.2"
     },
     "jsr": {
@@ -51,6 +55,14 @@
       "@hono/hono@4.4.4": {
         "integrity": "38265f77059877cbee3579c419c561e90d8e8bf6861ce554832018b9998dcc8e"
       },
+      "@m4rc3l05/cron@1.1.0": {
+        "integrity": "297bd4ea6b7c27d3b4afb8f726e8319e1e79ab887c0ef8612047e7a9e9081a9a",
+        "dependencies": [
+          "jsr:@std/async@0.220.1",
+          "npm:cron-parser@4.9.0",
+          "npm:dayjs@1.11.10"
+        ]
+      },
       "@m4rc3l05/process-lifecycle@0.1.0": {
         "integrity": "f900dfe4d28e8418a0d62f7636f8a3315b7b87a142a059fb50f62aa415d7585b"
       },
@@ -71,6 +83,9 @@
       },
       "@std/assert@0.221.0": {
         "integrity": "a5f1aa6e7909dbea271754fd4ab3f4e687aeff4873b4cef9a320af813adb489a"
+      },
+      "@std/async@0.220.1": {
+        "integrity": "61f0e9c53bf81f516aa7f54843f307eb5f05c5cf9902575a636ead162b5dfafe"
       },
       "@std/bytes@1.0.0": {
         "integrity": "9392e72af80adccaa1197912fa19990ed091cb98d5c9c4344b0c301b22d7c632"
@@ -173,6 +188,16 @@
           "json5": "json5@2.2.3"
         }
       },
+      "cron-parser@4.9.0": {
+        "integrity": "sha512-p0SaNjrHOnQeR8/VnfGbmg9te2kfyYSQ7Sc/j/6DtPL3JQvKxmjO9TSjNFpujqV3vEYYBvNNvXSxzyksBWAx1Q==",
+        "dependencies": {
+          "luxon": "luxon@3.4.4"
+        }
+      },
+      "dayjs@1.11.10": {
+        "integrity": "sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==",
+        "dependencies": {}
+      },
       "dayjs@1.11.11": {
         "integrity": "sha512-okzr3f11N6WuqYtZSvm+F776mB41wRZMhKP+hc34YdW+KmtYYK9iqvHSwo2k9FEH3fhGXvOPV6yz2IcSrfRUDg==",
         "dependencies": {}
@@ -183,6 +208,10 @@
       },
       "json5@2.2.3": {
         "integrity": "sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==",
+        "dependencies": {}
+      },
+      "luxon@3.4.4": {
+        "integrity": "sha512-zobTr7akeGHnv7eBOXcRgMeCP6+uyYsczwmeRCauvpvaAltgNyTbLH/+VaEAPUeWBT+1GuNmz4wC/6jtQzbbVA==",
         "dependencies": {}
       },
       "marked@12.0.2": {
@@ -204,6 +233,7 @@
     "dependencies": [
       "jsr:@db/sqlite@0.11.1",
       "jsr:@hono/hono@4.4.4",
+      "jsr:@m4rc3l05/cron@1.1.0",
       "jsr:@m4rc3l05/process-lifecycle@0.1.0",
       "jsr:@m4rc3l05/requester@0.4.0",
       "jsr:@m4rc3l05/sqlite-tag@0.2.0",

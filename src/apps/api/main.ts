@@ -4,6 +4,7 @@ import { type CustomDatabase, makeDatabase } from "#src/database/mod.ts";
 import { makeApp } from "#src/apps/api/app.ts";
 import { ProcessLifecycle } from "@m4rc3l05/process-lifecycle";
 import config from "config";
+import { Cron } from "@m4rc3l05/cron";
 
 const log = makeLogger("api");
 const { host, port } = config.get("apps.api");
@@ -14,7 +15,42 @@ gracefulShutdown({ processLifecycle, log });
 processLifecycle.registerService({
   name: "db",
   boot: () => makeDatabase(),
-  shutdown: (db) => db.close(),
+  shutdown: (db) => {
+    // Improve performance.
+    db.exec("pragma analysis_limit = 400");
+    db.exec("pragma optimize");
+
+    db.close();
+  },
+});
+
+processLifecycle.registerService({
+  name: "db-optimise",
+  boot: (pl) => {
+    const db = pl.getService<CustomDatabase>("db");
+    const cronInstance = new Cron(() => {
+      log.info("DB optimize runing");
+
+      try {
+        db.exec("pragma optimize");
+
+        log.info("DB optimize completed");
+      } catch (error) {
+        log.error("DB optimize failed", { error });
+      }
+    }, {
+      when: "0 * * * *",
+      timezone: "UTC",
+      tickerTimeout: 300,
+    });
+
+    log.info(`Next db optimize at ${cronInstance.nextAt()}`);
+
+    cronInstance.start();
+
+    return cronInstance;
+  },
+  shutdown: (cron) => cron.stop(),
 });
 
 processLifecycle.registerService({
