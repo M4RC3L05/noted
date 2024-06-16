@@ -28,7 +28,7 @@ processLifecycle.registerService({
   name: "db-optimise",
   boot: (pl) => {
     const db = pl.getService<CustomDatabase>("db");
-    const cronInstance = new Cron(() => {
+    const cronInstance = new Cron((signal) => {
       log.info("DB optimize runing");
 
       try {
@@ -37,6 +37,10 @@ processLifecycle.registerService({
         log.info("DB optimize completed");
       } catch (error) {
         log.error("DB optimize failed", { error });
+      }
+
+      if (!signal.aborted) {
+        log.info(`Next db optimize at ${cronInstance.nextAt()}`);
       }
     }, {
       when: "0 * * * *",
