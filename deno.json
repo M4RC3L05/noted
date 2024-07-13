@@ -36,7 +36,7 @@
     "@std/streams": "jsr:@std/streams@0.224.5",
     "@std/text": "jsr:@std/text@0.224.3",
     "@vinejs/vine": "npm:@vinejs/vine@2.1.0",
-    "config": "npm:config@3.3.11",
+    "config": "npm:config@3.3.12",
     "marked": "npm:marked@13.0.2"
   }
 }

@@ -34,7 +34,7 @@
       "jsr:@std/streams@0.224.5": "jsr:@std/streams@0.224.5",
       "jsr:@std/text@0.224.3": "jsr:@std/text@0.224.3",
       "npm:@vinejs/vine@2.1.0": "npm:@vinejs/vine@2.1.0",
-      "npm:config@3.3.11": "npm:config@3.3.11",
+      "npm:config@3.3.12": "npm:config@3.3.12",
       "npm:cron-parser@4.9.0": "npm:cron-parser@4.9.0",
       "npm:dayjs@1.11.10": "npm:dayjs@1.11.10",
       "npm:marked@13.0.0": "npm:marked@13.0.0",
@@ -196,8 +196,8 @@
         "integrity": "sha512-8WB3Jcas3swSvjIeA2yvCJ+Miyz5l1ZmB6HFb9R1317dt9LCQoswg/BGrmAmkWVEszSrrg4RwmO46qIm2OEnSA==",
         "dependencies": {}
       },
-      "config@3.3.11": {
-        "integrity": "sha512-Dhn63ZoWCW5EMg4P0Sl/XNsj/7RLiUIA1x1npCy+m2cRwRHzLnt3UtYtxRDMZW/6oOMdWhCzaGYkOcajGgrAOA==",
+      "config@3.3.12": {
+        "integrity": "sha512-Vmx389R/QVM3foxqBzXO8t2tUikYZP64Q6vQxGrsMpREeJc/aWRnPRERXWsYzOHAumx/AOoILWe6nU3ZJL+6Sw==",
         "dependencies": {
           "json5": "json5@2.2.3"
         }
@@ -264,7 +264,7 @@
       "jsr:@std/streams@0.224.5",
       "jsr:@std/text@0.224.3",
       "npm:@vinejs/vine@2.1.0",
-      "npm:config@3.3.11",
+      "npm:config@3.3.12",
       "npm:marked@13.0.2"
     ]
   }
