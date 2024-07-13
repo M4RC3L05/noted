@@ -16,6 +16,12 @@ jobs:
           install: true
           cache: true
 
+      - name: setup python tools
+        uses: liskin/gh-pipx@v1
+        with:
+          packages: >-
+            sqlfluff
+
       - name: check deps
         run: deno task deps:check
 
