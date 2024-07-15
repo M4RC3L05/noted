@@ -4,9 +4,9 @@
 .note-actions .button,
 .note-actions button,
 .note-actions input[type="submit"] {
-  font-size: .8rem;
+  font-size: 0.8rem;
   font-weight: bold;
-  padding: .5rem .7rem;
-  margin-top: .7rem;
-  margin-bottom: .7rem;
+  padding: 0.5rem 0.7rem;
+  margin-top: 0.7rem;
+  margin-bottom: 0.7rem;
 }
