@@ -1,7 +1,7 @@
 [tools]
 pipx = "latest"
 sqlite = "3.45.1"
-deno = "1.45"
+deno = "1.46"
 yamlfmt = "latest"
 yamllint = "latest"
 "pipx:sqlfluff/sqlfluff" = "3.1.1"
