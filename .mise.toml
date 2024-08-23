@@ -1,6 +1,6 @@
 [tools]
 pipx = "latest"
-sqlite = "3.45.1"
+sqlite = "3.46.0"
 deno = "1.46"
 yamlfmt = "latest"
 yamllint = "latest"
