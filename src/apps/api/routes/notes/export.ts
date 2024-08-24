@@ -9,7 +9,7 @@ export const exportNotes = (app: Hono) => {
   app.get("/export", (c) => {
     const tar = new Tar();
     const textEncoder = new TextEncoder();
-    const notes = c.get("db").getPrepared<NotesTable>(sql`select * from notes`);
+    const notes = c.get("db").iter<NotesTable>(sql`select * from notes`);
 
     for (const note of notes) {
       const encoded = textEncoder.encode(note.content);
