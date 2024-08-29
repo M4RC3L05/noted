@@ -30,7 +30,8 @@
       "jsr:@std/text@1.0.3": "jsr:@std/text@1.0.3",
       "npm:@vinejs/vine@2.1.0": "npm:@vinejs/vine@2.1.0",
       "npm:config@3.3.12": "npm:config@3.3.12",
-      "npm:marked@14.0.0": "npm:marked@14.0.0"
+      "npm:marked@14.0.0": "npm:marked@14.0.0",
+      "npm:simpledotcss@2.3.2": "npm:simpledotcss@2.3.2"
     },
     "jsr": {
       "@db/sqlite@0.12.0": {
@@ -193,6 +194,10 @@
         "integrity": "sha512-IO9QvjUMWxPQQhs60oOu10CRkWCiZzSUkzbXGGV9pviYl1fXYcvkzQ5jV9z8Y6un8ARoVRl4EtC6v6jNqbaJ/w==",
         "dependencies": {}
       },
+      "simpledotcss@2.3.2": {
+        "integrity": "sha512-/LoZHX66g+DDj1HzinshbSujFKQ+VP3t9cE1+aTtKCQCXJMNWKiVRZlpXMXCamnGquQOwgeMZsAtvdZd5hdpdQ==",
+        "dependencies": {}
+      },
       "validator@13.12.0": {
         "integrity": "sha512-c1Q0mCiPlgdTVVVIJIrBuxNicYE+t/7oKeI9MWLj3fh/uq2Pxh/3eeWbVZ4OcGW1TUf53At0njHw5SMdA3tmMg==",
         "dependencies": {}
@@ -217,7 +222,8 @@
       "jsr:@std/text@1.0.3",
       "npm:@vinejs/vine@2.1.0",
       "npm:config@3.3.12",
-      "npm:marked@14.0.0"
+      "npm:marked@14.0.0",
+      "npm:simpledotcss@2.3.2"
     ]
   }
 }
