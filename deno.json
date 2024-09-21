@@ -1,6 +1,6 @@
 {
   "name": "@m4rc3l05/noted",
-  "version": "0.15.0",
+  "version": "0.15.1",
   "exports": "./deno.json",
   "tasks": {
     "api": "deno run -A --unstable-ffi --cached-only src/apps/api/main.ts",
