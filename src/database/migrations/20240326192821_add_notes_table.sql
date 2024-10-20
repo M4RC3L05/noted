@@ -9,12 +9,14 @@ create table notes (
   deleted_at text
 ) strict, without rowid;
 
-create trigger "notes_update_updated_at" -- noqa: PRS
+create trigger "notes_update_updated_at"
 after update on notes
 for each row
-when NEW.updated_at = OLD.updated_at
+when new.updated_at = old.updated_at
 begin
-  update notes set updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') where id = OLD.id;
+update notes
+set updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+where id = old.id;
 end
 
 -- migrate:down

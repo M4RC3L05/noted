@@ -3,12 +3,10 @@
   "version": "0.15.2",
   "exports": "./deno.json",
   "tasks": {
-    "api": "deno run -A --unstable-ffi --cached-only src/apps/api/main.ts",
-    "web": "deno run -A --unstable-ffi --cached-only src/apps/web/main.ts",
+    "api": "deno run -A src/apps/api/main.ts",
+    "web": "deno run -A src/apps/web/main.ts",
     "pretty-logs": "deno run --no-lock jsr:@m4rc3l05/pretty-logs@0.2.2/bin/deno",
-    "dev:dbmate": "deno run -A --no-lock npm:dbmate -u 'sqlite:./data/app.db' -d ./src/database/migrations --no-dump-schema",
-    "deps:lock": "deno cache --frozen=false --node-modules-dir **/*.ts **/*.tsx",
-    "deps": "deno cache --reload --frozen --node-modules-dir **/*.ts **/*.tsx"
+    "dev:dbmate": "deno run -A --no-lock npm:dbmate -u 'sqlite:./data/app.db' -d ./src/database/migrations --no-dump-schema"
   },
   "compilerOptions": {
     "jsx": "precompile",
