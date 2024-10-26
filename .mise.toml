@@ -5,8 +5,8 @@ pipx_uvx = true
 [tools]
 sqlite = "3.46.0"
 uv = "0.4.24"
-deno = "2.0.2"
 "pipx:sqlfluff/sqlfluff" = "3.2.4"
+deno = "2.0.3"
 
 [tasks."check:format"]
 run = """
