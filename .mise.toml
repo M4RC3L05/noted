@@ -4,7 +4,7 @@ pipx_uvx = true
 
 [tools]
 sqlite = "3.46.0"
-deno = "2.0.3"
+deno = "2.0.4"
 uv = "0.4.27"
 "pipx:sqlfluff/sqlfluff" = "3.2.5"
 
