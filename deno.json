@@ -1,6 +1,6 @@
 {
   "name": "@m4rc3l05/noted",
-  "version": "0.15.8",
+  "version": "0.15.9",
   "exports": "./deno.json",
   "tasks": {
     "api": "deno run -A --cached-only src/apps/api/main.ts",
