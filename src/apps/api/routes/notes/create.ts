@@ -13,7 +13,7 @@ export const create = (app: Hono) => {
       await c.req.json(),
     );
 
-    const note = c.get("db").sql`
+    const [note] = c.get("db").sql`
       insert into notes (content, name)
       values (${content ?? null}, ${name})
       returning id, name, deleted_at as "deletedAt", created_at as "createdAt", updated_at as "updatedAt";

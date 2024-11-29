@@ -23,7 +23,12 @@ export const makeApp = (
 ) => {
   const app = new Hono();
 
-  app.onError(errorMapper({ defaultMapper: errorMappers.defaultErrorMapper }));
+  app.onError(
+    errorMapper({
+      defaultMapper: errorMappers.defaultErrorMapper,
+      mappers: [errorMappers.validationErrorMapper],
+    }),
+  );
 
   app.notFound(() => {
     throw new HTTPException(404, { message: "Route not found" });

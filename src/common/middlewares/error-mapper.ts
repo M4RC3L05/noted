@@ -21,6 +21,10 @@ const respond = (error: HTTPException, c: Context) => {
     },
   };
 
+  if ("validationErrors" in error) {
+    Object.assign(payload.error, { validationErrors: error.validationErrors });
+  }
+
   return c.json(payload, {
     status: error.status,
     headers: error.getResponse().headers,

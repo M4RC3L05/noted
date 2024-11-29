@@ -10,7 +10,10 @@ const editNoteBodySchema = vine.object({
     "content",
     "delete",
   ]),
-  content: vine.string().optional().requiredIfMissing(["name", "delete"]),
+  content: vine.string().nullable().optional().requiredIfMissing([
+    "name",
+    "delete",
+  ]),
   delete: vine.boolean().optional().requiredIfMissing(["name", "content"]),
 });
 const editNoteBodyValidator = vine.compile(editNoteBodySchema);
@@ -23,26 +26,47 @@ export const patch = (app: Hono) => {
       const { content, name, delete: del } = await editNoteBodyValidator
         .validate(await c.req.json());
       const updateData = {
-        name,
-        content,
+        name: name === undefined ? "undefined" : name,
+        content: content === undefined ? "undefined" : content,
         deletedAt: typeof del === "boolean"
-          ? del ? new Date().toISOString() : null
-          : undefined,
+          ? (del ? new Date().toISOString() : null)
+          : "undefined",
       };
 
-      const [note] = c.get("db").sql`
+      const [updatedNote] = c.get("db").sql<{ id: string }>`
         update notes
         set 
-          name = coalesce(${updateData.name ?? null}, name),
-          content = coalesce(${updateData.content ?? null}, content),
-          deleted_at = coalesce(${updateData.deletedAt ?? null}, deleted_at)
+          name = (
+            case
+              when ${updateData.name} = 'undefined' THEN name
+              else ${updateData.name}
+            end
+          ),
+          content = (
+            case
+              when ${updateData.content} = 'undefined' THEN content
+              else ${updateData.content}
+            end
+          ),
+          deleted_at = (
+            case
+              when ${updateData.deletedAt} = 'undefined' THEN deleted_at
+              else ${updateData.deletedAt}
+            end
+          )
         where id = ${id}
-        returning id, name, content, deleted_at as "deletedAt", created_at as "createdAt", updated_at as "updatedAt";
+        returning id;
       `;
 
-      if (!note) {
+      if (!updatedNote) {
         throw new HTTPException(404, { message: "Could not find note" });
       }
+
+      const [note] = c.get("db").sql`
+        select id, name, content, deleted_at as "deletedAt", created_at as "createdAt", updated_at as "updatedAt"
+        from notes
+        where id = ${id}
+      `;
 
       return c.json({ data: note });
     },
