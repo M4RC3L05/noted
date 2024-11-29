@@ -12,7 +12,7 @@ const processLifecycle = new ProcessLifecycle();
 gracefulShutdown({ processLifecycle, log });
 
 processLifecycle.registerService({
-  name: "api",
+  name: "web",
   boot: (pl) => {
     const servicesConfig = config.get("apps.web.services");
 

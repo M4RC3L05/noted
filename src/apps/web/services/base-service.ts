@@ -1,19 +1,12 @@
-import { deepMerge } from "@std/collections";
 import { encodeBase64 } from "@std/encoding/base64";
-import { Requester } from "@m4rc3l05/requester";
-import * as requesterComposers from "@m4rc3l05/requester/composers";
 
 export abstract class BaseService {
   #baseUrl: string;
   #auth: { username: string; password: string };
-  #requester: Requester;
 
   constructor(baseUrl: string, auth: { username: string; password: string }) {
     this.#baseUrl = baseUrl;
     this.#auth = auth;
-    this.#requester = new Requester().with(
-      requesterComposers.timeout({ ms: 10000 }),
-    );
   }
 
   request(
@@ -23,20 +16,21 @@ export abstract class BaseService {
       sendResponse?: boolean;
     },
   ) {
-    return this.#requester.fetch(
-      `${this.#baseUrl}${path}`,
-      // deno-lint-ignore no-explicit-any
-      deepMerge((init ?? {}) as any, {
-        headers: {
-          "authorization": `Basic ${
-            encodeBase64(`${this.#auth.username}:${this.#auth.password}`)
-          }`,
-        },
-        signal: init?.signal
-          ? AbortSignal.any([init.signal, AbortSignal.timeout(10_000)])
-          : AbortSignal.timeout(10_000),
-      }),
-    ).then((response) => {
+    if (init) {
+      init.headers = new Headers(init.headers);
+      (init.headers as Headers).set(
+        "authorization",
+        `Basic ${
+          encodeBase64(`${this.#auth.username}:${this.#auth.password}`)
+        }`,
+      );
+
+      init.signal = init?.signal
+        ? AbortSignal.any([init.signal, AbortSignal.timeout(10_000)])
+        : AbortSignal.timeout(10_000);
+    }
+
+    return fetch(`${this.#baseUrl}${path}`, init).then((response) => {
       if (sendResponse) return response;
       if (response.status === 204) return;
 

@@ -1,12 +1,16 @@
 import type { Hono } from "@hono/hono";
-import { sql } from "@m4rc3l05/sqlite-tag";
 import { TarStream, type TarStreamInput } from "@std/tar/tar-stream";
 import type { NotesTable } from "#src/database/types/mod.ts";
 
 export const exportNotes = (app: Hono) => {
   app.get("/export", (c) => {
     const textEncoder = new TextEncoder();
-    const notes = c.get("db").iter<NotesTable>(sql`select * from notes`);
+    const notes = c.get("db").prepare(
+      `select 
+        id, name, content, deleted_at as "deletedAt", created_at as "createdAt", updated_at as "updatedAt"
+      from notes`,
+    )
+      .iter() as IterableIterator<NotesTable>;
     const input: TarStreamInput[] = [];
 
     for (const note of notes) {

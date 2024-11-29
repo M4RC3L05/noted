@@ -1,6 +1,6 @@
 import type { Hono } from "@hono/hono";
 import vine from "@vinejs/vine";
-import { sql } from "@m4rc3l05/sqlite-tag";
+import { HTTPException } from "@hono/hono/http-exception";
 
 const editNoteParamsSchema = vine.object({ id: vine.string() });
 const editNoteParamsValidator = vine.compile(editNoteParamsSchema);
@@ -25,17 +25,24 @@ export const patch = (app: Hono) => {
       const updateData = {
         name,
         content,
-        deleted_at: typeof del === "boolean"
+        deletedAt: typeof del === "boolean"
           ? del ? new Date().toISOString() : null
           : undefined,
       };
 
-      const note = c.get("db").get(sql`
+      const [note] = c.get("db").sql`
         update notes
-        set ${sql.set(updateData)}
+        set 
+          name = coalesce(${updateData.name ?? null}, name),
+          content = coalesce(${updateData.content ?? null}, content),
+          deleted_at = coalesce(${updateData.deletedAt ?? null}, deleted_at)
         where id = ${id}
-        returning *;
-      `);
+        returning id, name, content, deleted_at as "deletedAt", created_at as "createdAt", updated_at as "updatedAt";
+      `;
+
+      if (!note) {
+        throw new HTTPException(404, { message: "Could not find note" });
+      }
 
       return c.json({ data: note });
     },
