@@ -36,24 +36,9 @@ export const patch = (app: Hono) => {
       const [updatedNote] = c.get("db").sql<{ id: string }>`
         update notes
         set 
-          name = (
-            case
-              when ${updateData.name} = -1 THEN name
-              else ${updateData.name}
-            end
-          ),
-          content = (
-            case
-              when ${updateData.content} = -1 THEN content
-              else ${updateData.content}
-            end
-          ),
-          deleted_at = (
-            case
-              when ${updateData.deletedAt} = -1 THEN deleted_at
-              else ${updateData.deletedAt}
-            end
-          )
+          name = iif(${updateData.name} = -1, name, ${updateData.name}),
+          content = iif(${updateData.content} = -1, content, ${updateData.content}),
+          deleted_at = iif(${updateData.deletedAt} = -1, deleted_at, ${updateData.deletedAt})
         where id = ${id}
         returning id;
       `;

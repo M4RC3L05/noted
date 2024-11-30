@@ -15,11 +15,7 @@ export const all = (app: Hono) => {
       select
         id, name, deleted_at as "deletedAt", created_at as "createdAt", updated_at as "updatedAt"
       from notes
-      where
-        case
-          when ${showTrashed} = true then deleted_at is not null
-          when ${showTrashed} = false then deleted_at is null
-        end
+      where iif(${showTrashed} = true, deleted_at is not null, deleted_at is null)
       order by updated_at desc
     `;
 
