@@ -26,11 +26,11 @@ export const patch = (app: Hono) => {
       const { content, name, delete: del } = await editNoteBodyValidator
         .validate(await c.req.json());
       const updateData = {
-        name: name === undefined ? "undefined" : name,
-        content: content === undefined ? "undefined" : content,
+        name: name === undefined ? -1 : name,
+        content: content === undefined ? -1 : content,
         deletedAt: typeof del === "boolean"
           ? (del ? new Date().toISOString() : null)
-          : "undefined",
+          : -1,
       };
 
       const [updatedNote] = c.get("db").sql<{ id: string }>`
@@ -38,19 +38,19 @@ export const patch = (app: Hono) => {
         set 
           name = (
             case
-              when ${updateData.name} = 'undefined' THEN name
+              when ${updateData.name} = -1 THEN name
               else ${updateData.name}
             end
           ),
           content = (
             case
-              when ${updateData.content} = 'undefined' THEN content
+              when ${updateData.content} = -1 THEN content
               else ${updateData.content}
             end
           ),
           deleted_at = (
             case
-              when ${updateData.deletedAt} = 'undefined' THEN deleted_at
+              when ${updateData.deletedAt} = -1 THEN deleted_at
               else ${updateData.deletedAt}
             end
           )
