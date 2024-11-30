@@ -5,30 +5,32 @@ import type { NotesTable } from "#src/database/types/mod.ts";
 export const exportNotes = (app: Hono) => {
   app.get("/export", (c) => {
     const textEncoder = new TextEncoder();
-    const notes = c.get("db").prepare(
-      `select 
-        id, name, content, deleted_at as "deletedAt", created_at as "createdAt", updated_at as "updatedAt"
-      from notes`,
-    )
-      .iter() as IterableIterator<NotesTable>;
-    const input: TarStreamInput[] = [];
-
-    for (const note of notes) {
-      const encoded = textEncoder.encode(note.content);
-      const tarPath = note.deletedAt !== null
-        ? `/trashed/${note.name}.txt`
-        : `/notes/${note.name}.txt`;
-
-      input.push({
-        readable: ReadableStream.from([encoded]),
-        path: tarPath,
-        size: encoded.byteLength,
-        type: "file",
-      });
-    }
 
     return c.body(
-      ReadableStream.from(input).pipeThrough(new TarStream()),
+      ReadableStream.from(
+        c.get("db").prepare(
+          `select 
+            id, name, content, deleted_at as "deletedAt", created_at as "createdAt", updated_at as "updatedAt"
+          from notes`,
+        )
+          .iter() as IterableIterator<NotesTable>,
+      ).pipeThrough(
+        new TransformStream<NotesTable, TarStreamInput>({
+          transform: (note, controller) => {
+            const encoded = textEncoder.encode(note.content);
+            const tarPath = note.deletedAt !== null
+              ? `/trashed/${note.name}.txt`
+              : `/notes/${note.name}.txt`;
+
+            controller.enqueue({
+              readable: ReadableStream.from([encoded]),
+              path: tarPath,
+              size: encoded.byteLength,
+              type: "file",
+            } as TarStreamInput);
+          },
+        }),
+      ).pipeThrough(new TarStream()),
       200,
       {
         "content-type": "application/x-tar",
