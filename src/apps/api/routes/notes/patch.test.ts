@@ -11,12 +11,15 @@ import {
   it,
 } from "@std/testing/bdd";
 import { assertEquals, assertNotEquals } from "@std/assert";
+import { testDbUtils } from "#src/common/utils/mod.ts";
 
 let db: CustomDatabase;
 let app: Hono;
 
-beforeAll(() => {
+beforeAll(async () => {
   db = makeDatabase();
+  await testDbUtils.runMigrations(db);
+
   app = makeApp({ db });
 });
 
