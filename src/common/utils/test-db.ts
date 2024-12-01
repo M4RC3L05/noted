@@ -8,11 +8,14 @@ export const runMigrations = async (db: CustomDatabase) => {
 
   db.exec("pragma foreign_keys = off");
 
-  for await (const file of Deno.readDir(migartionsDir)) {
-    if (!file.name.endsWith(".sql")) continue;
+  const migrationFiles = (await Array.fromAsync(Deno.readDir(migartionsDir)))
+    .filter((item) => item.isFile && item.name.endsWith(".sql")).map((item) =>
+      item.name
+    ).sort();
 
+  for (const file of migrationFiles) {
     const filePath = new URL(
-      `${migrationsPathRelative}/${file.name}`,
+      `${migrationsPathRelative}/${file}`,
       import.meta.url,
     );
 
