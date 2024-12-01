@@ -16,19 +16,17 @@ export abstract class BaseService {
       sendResponse?: boolean;
     },
   ) {
-    if (init) {
-      init.headers = new Headers(init.headers);
-      (init.headers as Headers).set(
-        "authorization",
-        `Basic ${
-          encodeBase64(`${this.#auth.username}:${this.#auth.password}`)
-        }`,
-      );
+    init ??= {};
 
-      init.signal = init?.signal
-        ? AbortSignal.any([init.signal, AbortSignal.timeout(10_000)])
-        : AbortSignal.timeout(10_000);
-    }
+    init.headers = new Headers(init.headers);
+    (init.headers as Headers).set(
+      "authorization",
+      `Basic ${encodeBase64(`${this.#auth.username}:${this.#auth.password}`)}`,
+    );
+
+    init.signal = init?.signal
+      ? AbortSignal.any([init.signal, AbortSignal.timeout(10_000)])
+      : AbortSignal.timeout(10_000);
 
     return fetch(`${this.#baseUrl}${path}`, init).then((response) => {
       if (sendResponse) return response;
