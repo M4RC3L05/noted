@@ -8,7 +8,7 @@ export const runMigrations = async (db: CustomDatabase) => {
 
   db.exec("pragma foreign_keys = off");
 
-  for await (const file of Deno.readDirSync(migartionsDir)) {
+  for await (const file of Deno.readDir(migartionsDir)) {
     if (!file.name.endsWith(".sql")) continue;
 
     const filePath = new URL(
