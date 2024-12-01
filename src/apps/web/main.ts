@@ -20,6 +20,7 @@ processLifecycle.registerService({
       notesService: new NotesService(
         servicesConfig.api.url,
         servicesConfig.api.basicAuth,
+        pl.signal,
       ),
     };
 
