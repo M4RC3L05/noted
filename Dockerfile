@@ -7,11 +7,15 @@ USER deno
 
 WORKDIR /app
 
-COPY --chown=deno:deno deno.json deno.lock .
-RUN deno install --node-modules-dir
+COPY --chown=deno:deno . .
+
+RUN deno install --node-modules-dir --entrypoint src/apps/api/main.ts
+RUN deno install --node-modules-dir --entrypoint src/apps/web/main.ts
 RUN deno eval "import '@db/sqlite'"
 
-COPY --chown=deno:deno . .
+RUN BUILD_DRY_RUN=true DATABASE_PATH=":memory:" timeout 2s deno task api || true
+RUN BUILD_DRY_RUN=true DATABASE_PATH=":memory:" timeout 2s deno task web || true
+
 RUN mkdir /app/data
 
 VOLUME [ "/app/data" ]
