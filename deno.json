@@ -5,11 +5,11 @@
   "tasks": {
     "api": {
       "description": "Run api app",
-      "command": "deno run -A --cached-only src/apps/api/main.ts"
+      "command": "deno run -A --cached-only --unstable-npm-lazy-caching src/apps/api/main.ts"
     },
     "web": {
       "description": "Run web app",
-      "command": "deno run -A --cached-only src/apps/web/main.ts"
+      "command": "deno run -A --cached-only --unstable-npm-lazy-caching src/apps/web/main.ts"
     },
     "dev:pretty-logs": {
       "description": "Interact with pino-pretty",
@@ -70,7 +70,7 @@
     "@std/log": "jsr:@std/log@0.224.13",
     "@std/tar": "jsr:@std/tar@0.1.4",
     "@std/testing": "jsr:@std/testing@1.0.9",
-    "@std/text": "jsr:@std/text@^1.0.10",
+    "@std/text": "jsr:@std/text@1.0.10",
     "@vinejs/vine": "npm:@vinejs/vine@3.0.0",
     "config": "npm:config@3.3.12",
     "dbmate": "npm:dbmate@2.24.2",

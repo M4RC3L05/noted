@@ -9,12 +9,14 @@ WORKDIR /app
 
 COPY --chown=deno:deno . .
 
-RUN deno install --node-modules-dir --entrypoint src/apps/api/main.ts
-RUN deno install --node-modules-dir --entrypoint src/apps/web/main.ts
+RUN deno install --unstable-npm-lazy-caching --entrypoint src/apps/api/main.ts
+RUN deno install --unstable-npm-lazy-caching --entrypoint src/apps/web/main.ts
 RUN deno eval "import '@db/sqlite'"
 
-RUN BUILD_DRY_RUN=true DATABASE_PATH=":memory:" timeout 2s deno task api || true
-RUN BUILD_DRY_RUN=true DATABASE_PATH=":memory:" timeout 2s deno task web || true
+RUN BUILD_DRY_RUN=true DATABASE_PATH=":memory:" timeout 2s deno run -A --cached-only --unstable-npm-lazy-caching src/apps/api/main.ts || true
+RUN BUILD_DRY_RUN=true DATABASE_PATH=":memory:" timeout 2s deno run -A --cached-only --unstable-npm-lazy-caching src/apps/web/main.ts || true
+
+RUN ls -la ./node_modules
 
 RUN mkdir /app/data
 
