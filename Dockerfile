@@ -25,8 +25,7 @@ WORKDIR /app
 COPY --chown=deno:deno . .
 COPY --from=build /app/src/apps/web/public /app/src/apps/web/public
 
-RUN deno install --unstable-npm-lazy-caching --entrypoint src/apps/api/main.ts
-RUN deno install --unstable-npm-lazy-caching --entrypoint src/apps/web/main.ts
+RUN deno install --unstable-npm-lazy-caching --entrypoint src/apps/api/main.ts src/apps/web/main.ts
 RUN deno eval "import '@db/sqlite'"
 
 RUN BUILD_DRY_RUN=true DATABASE_PATH=":memory:" timeout 2s deno run -A --cached-only --unstable-npm-lazy-caching src/apps/api/main.ts || true
