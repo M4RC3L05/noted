@@ -41,10 +41,13 @@
       "description": "Run lint checks",
       "command": "deno lint"
     },
+    "check:check": {
+      "description": "Run check checks",
+      "command": "deno check ."
+    },
     "checks": {
       "description": "Run code checks",
-      "dependencies": ["check:fmt", "check:lint"],
-      "command": "deno check ."
+      "dependencies": ["check:fmt", "check:lint", "check:check"]
     }
   },
   "compilerOptions": {
