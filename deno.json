@@ -1,6 +1,6 @@
 {
   "name": "@m4rc3l05/noted",
-  "version": "0.15.15",
+  "version": "0.15.16",
   "exports": "./deno.json",
   "tasks": {
     "api": {
