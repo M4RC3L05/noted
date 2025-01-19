@@ -3,4 +3,4 @@ experimental = true
 
 [tools]
 sqlite = "3.46.0"
-deno = "2.1.5"
+deno = "2.1.6"
